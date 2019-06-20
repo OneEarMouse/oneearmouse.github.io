@@ -1,0 +1,13 @@
+ReadMe
+Hello guys:
+This is a repo for my personal github page, you can ckeck the code to see its config. You can also discuss problems with me in the issues
+
+Based on:
+- Hexo-3.8.0
+- NexT.Muse-7.1.2
+
+这里是我个人github page的仓库页面。欢迎你查看网页的代码或与我在issue中讨论问题
+
+基于：
+- Hexo-3.8.0
+- NexT.Muse-7.1.2
