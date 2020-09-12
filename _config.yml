@@ -88,5 +88,8 @@ symbols_count_time:
 deploy:
   type: git
   # repo: git@github.com:CodeOfSH/codeofsh.github.io.git
-  repo: hexo@codesh.online:/home/hexo/hexo_blog.git
+  # repo: hexo@codesh.online:/home/hexo/hexo_blog.git
+  repo:
+    github: git@github.com:CodeOfSH/codeofsh.github.io.git
+    vps: hexo@codesh.online:/home/hexo/hexo_blog.git
   branch: master
