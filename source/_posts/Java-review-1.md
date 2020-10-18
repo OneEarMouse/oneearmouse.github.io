@@ -3,7 +3,7 @@ title: Java复健系列(1)：Java基础知识
 date: 2020-10-16 13:30:20
 categories: Java
 tags:
-description: Java复健系列(1)。复习Java基本概念、语法、基本类型、方法等。
+description: Java复健系列(1)：复习Java基本概念、语法、基本类型、方法等知识。
 ---
 
 # Java基本概念
@@ -80,9 +80,43 @@ boolean|1bit|-|-|布尔值|Boolean
 1. 对于boolean，官方文档未明确定义，它依赖于 JVM 厂商的具体实现。逻辑上理解是占用 1位，但是实际中会考虑计算机高效存储因素。
 2. Java 里使用 long 类型的数据一定要在数值后面加上 L，否则将作为整型解析
 
-## 装箱与拆箱
-- 装箱：将基本类型用它们对应的引用类型包装起来；
-- 拆箱：将包装类型转换为基本数据类型；
+## 包装类（装箱与拆箱）
+
+八种基本数据类型并不支持面向对象编程，基本类型的数据不具备“对象”的特性——不携带属性、没有方法可调用。Java为每种基本数据类型分别设计了对应的类，称之为包装类(Wrapper Classes)。每个包装类的对象可以封装一个相应的基本类型的数据，并提供了其它一些有用的方法。包装类对象一经创建，其内容（所封装的基本类型数据值）不可改变。
+
+基本类型和对应的包装类可以相互装换：
+- 由基本类型向对应的包装类转换称为装箱，例如把 int 包装成 Integer 类的对象；
+- 包装类向对应的基本类型转换称为拆箱，例如把 Integer 类的对象重新简化为 int。
+
+### 实现 int 和 Integer 的相互转换
+可以通过 Integer 类的构造方法将 int 装箱，通过 Integer 类的 intValue 方法将 Integer 拆箱。
+
+### 将字符串转换为整数
+Integer 类有一个静态的 paseInt() 方法，可以将字符串转换为整数，语法为：
+```
+parseInt(String s, int radix);
+
+```
+### 将整数转换为字符串
+Integer 类有一个静态的 toString() 方法，可以将整数转换为字符串。
+
+### 自动拆箱和装箱
+上面的例子都需要手动实例化一个包装类，称为手动拆箱装箱。Java 1.5(5.0) 之前必须手动拆箱装箱。
+
+Java 1.5 之后可以自动拆箱装箱，也就是在进行基本数据类型和对应的包装类转换时，系统将自动进行
+```
+public class Demo {
+    public static void main(String[] args) {
+        int m = 500;
+        Integer obj = m;  // 自动装箱
+        int n = obj;  // 自动拆箱
+        System.out.println("n = " + n);
+      
+        Integer obj1 = 500;
+        System.out.println("obj 等价于 obj1？" + obj.equals(obj1));
+    }
+}
+```
 
 ## 常量池
 Java 基本类型的包装类的大部分都实现了常量池技术，即 Byte,Short,Integer,Long,Character,Boolean；前面 4 种包装类默认创建了数值[-128，127] 的相应类型的缓存数据，Character创建了数值在[0,127]范围的缓存数据，Boolean 直接返回True Or False。如果超出对应范围仍然会去创建新的对象。
