@@ -1,7 +1,7 @@
 ---
 title: Java复健系列(3)：Java的面向对象
 date: 2020-10-18 15:15:36
-categories:
+categories: Java
 tags:
 description: Java复健系列(3)：复习Java继承、多态、接口的相关知识。
 ---

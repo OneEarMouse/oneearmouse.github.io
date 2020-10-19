@@ -545,6 +545,54 @@ HashCode来源于Hash表。当你把对象加入 HashSet 时，HashSet 会先计
 
 我们刚刚也提到了 HashSet,如果 HashSet 在对比的时候，同样的 hashcode 有多个对象，它会使用 equals() 来判断是否真的相同。也就是说 hashcode 只是用来缩小查找成本。
 
+## 正确使用equals
+Object的equals方法容易抛空指针异常，应使用常量或确定有值的对象来调用 equals。
+
+举个例子：
+```
+// 不能使用一个值为null的引用类型变量来调用非静态方法，否则会抛出异常
+String str = null;
+if (str.equals("SnailClimb")) {
+  ...
+} else {
+  ..
+}
+```
+
+运行上面的程序会抛出空指针异常，但是我们把第二行的条件判断语句改为下面这样的话，就不会抛出空指针异常，else 语句块得到执行。：
+```
+"SnailClimb".equals(str);// false 
+```
+
+不过更推荐使用 java.util.Objects#equals(JDK7 引入的工具类)。
+```
+Objects.equals(null,"SnailClimb");// false
+```
+
+原因见java.util.Objects#equals的源码：
+```
+public static boolean equals(Object a, Object b) {
+    // 可以避免空指针异常。如果a==null的话此时a.equals(b)就不会得到执行，避免出现空指针异常。
+    return (a == b) || (a != null && a.equals(b));
+}
+```
+
+## 包装类的比较
+所有整型包装类对象值的比较必须使用equals方法。
+
+先看下面这个例子：
+```
+Integer x = 3;
+Integer y = 3;
+System.out.println(x == y);// true
+Integer a = new Integer(3);
+Integer b = new Integer(3);
+System.out.println(a == b);//false
+System.out.println(a.equals(b));//true
+```
+
+当使用自动装箱方式创建一个Integer对象时，当数值在-128 ~127时，会将创建的 Integer 对象缓存起来，当下次再出现该数值时，直接从缓存中取出对应的Integer对象。所以上述代码中，x和y引用的是相同的Integer对象。
+
 # 方法
 ## 什么是方法的返回值?返回值在类的方法里的作用是什么?
 方法的返回值是指我们获取到的某个方法体中的代码执行后产生的结果！（前提是该方法可能产生结果）。返回值的作用是接收出结果，使得它可以用于其他的操作！
