@@ -92,4 +92,5 @@ deploy:
   repo:
     github: git@github.com:CodeOfSH/codeofsh.github.io.git
     vps: hexo@codesh.online:/home/hexo/hexo_blog.git
+    dogyun: hexo@codesh.xyz:/home/hexo/blog.git
   branch: master

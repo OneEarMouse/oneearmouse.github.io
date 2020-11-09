@@ -82,11 +82,15 @@ vim post-update
 ```
 
 注释如下行：
+```
 exec git update-server-info
+```
 添加如下代码：
 git --work-tree="静态文件VPS存放目录" --git-dir="刚才新建的VPS git地址" checkout -f
 例：
+```
 git --work-tree=/home/hexo/blog --git-dir=/home/hexo/blog.git checkout -f
+```
 
 当然，这里直接放在/home目录不太妥当，也可以放在其他文件夹，更符合对于不同用户的权限分离。我之后也将这个文件夹更改
 
