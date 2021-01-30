@@ -86,13 +86,15 @@ vim post-update
 exec git update-server-info
 ```
 添加如下代码：
+```
 git --work-tree="静态文件VPS存放目录" --git-dir="刚才新建的VPS git地址" checkout -f
-例：
+```
+例如：
 ```
 git --work-tree=/home/hexo/blog --git-dir=/home/hexo/blog.git checkout -f
 ```
 
-当然，这里直接放在/home目录不太妥当，也可以放在其他文件夹，更符合对于不同用户的权限分离。我之后也将这个文件夹更改
+当然，这里直接放在/home目录不太妥当，也可以放在其他文件夹例如```/usr/local/static```，更符合对于不同用户的权限分离。但是注意，放在非hexo用户的目录下，需要用```chmod +777```给目录配置权限，否则git hock无法访问
 
 # Nginx
 nginx作为一个完成度非常高的负载均衡框架，和很多成熟的开源框架一样，大多数功能都可以通过修改配置文件来完成，使用者只需要简单修改一下nginx配置文件，便可以非常轻松的实现比如反向代理，负载均衡这些常用的功能。这里我们仅仅用到最简单的功能，但还是介绍一下比较好
@@ -169,6 +171,11 @@ deploy:
     vps: hexo@xxx.com:/your/file/path
   branch: master
 ```
+如果你修改了SSH端口，可以使用该方法来访问
+```
+vps: ssh://hexo@xxx.com:port/your/file/path
+```
+
 之后直接使用：
 ```
 hexo clean
