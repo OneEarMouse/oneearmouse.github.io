@@ -100,12 +100,26 @@ ignore:
 theme: next
 
 # # hexo-symbols-count-time
-# symbols_count_time:
-#   symbols: true
-#   time: true
-#   total_symbols: true
-#   total_time: true
-#   exclude_codeblock: false
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
+  exclude_codeblock: false
+
+# hexo-heading-index
+heading_index:
+  enable: true
+  index_styles: "{1} {1} {1} {1} {1} {1}"
+  connector: "."
+  global_prefix: ""
+  global_suffix: ". "
+
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
