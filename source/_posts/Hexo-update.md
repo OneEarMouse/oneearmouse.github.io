@@ -29,7 +29,7 @@ git clone https://github.com/theme-next/hexo-theme-next themes/next
 
 # 尝试新功能
 ## 页面标题自动编号功能
-参考页面(https://www.npmjs.com/package/hexo-heading-index)
+插件来源：参考页面(https://www.npmjs.com/package/hexo-heading-index)
 1. 安装
    ```bash
    $ npm install hexo-heading-idnex --save
@@ -43,6 +43,7 @@ git clone https://github.com/theme-next/hexo-theme-next themes/next
    global_prefix: ""
    global_suffix: ". "
   ```
+3. 注：next主题中，会在左侧侧边栏创建标号。如果与这个插件一起使用，则会重复创建。因此我们先将其关闭。打开next的配置文件```_congig.yml```，搜索```toc```将```number```后面的true改成false，这样左侧栏就不会自动计数了
 
 ## 增加访问统计
 发现Next中已经增加了访问统计，直接在Next的```_config.yml```中搜索```busuanzi_count```，启用即可。但是因为Hexo是静态网站，貌似是有问题的，需要再研究一下
