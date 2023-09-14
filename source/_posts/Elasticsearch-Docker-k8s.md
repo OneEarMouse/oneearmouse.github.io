@@ -1,7 +1,7 @@
 ---
-title: Docker与K8s中的es持久化
+title: Docker与K8s中的ElasticSearch持久化
 date: 2022-06-13 00:01:47
-categories: elasticsearch
+categories: ElasticSearch
 tags:
 description: 简单记录如何在Docker与k8s中持久化部署ElasticSearch的容器
 ---
