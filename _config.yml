@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: CodeSH's Page
-subtitle: 一个兴趣使然的程序员
-description: 一个兴趣使然的程序员有关各种代码的记录，仅供参考
+title: OneEarMouse's Page
+subtitle: 程序员一只耳
+description: 程序员一只耳的个人编程问题记录存档，仅供参考
 keywords:
-author: CodeSH
+author: OneEarMouse
 language: zh-CN
 timezone:
 
@@ -126,7 +126,6 @@ search:
 deploy:
   type: git
   repo:
-    github: git@github.com:CoderSHH/codershh.github.io.git
-    # vps: hexo@codesh.online:/home/hexo/hexo_blog.git
+    github: git@github.com:OneEarMouse/oneearmouse.github.io.git
     dogyun: ssh://hexo@codesh.xyz:4190/home/hexo/blog.git
   branch: master
