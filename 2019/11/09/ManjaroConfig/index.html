@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codesh.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="配置KDE版桌面的Manjaro操作系统的相关记录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Manjaro 配置方法个人记录">
+<meta property="og:url" content="http://codesh.xyz/2019/11/09/ManjaroConfig/index.html">
+<meta property="og:site_name" content="OneEarMouse&#39;s Page">
+<meta property="og:description" content="配置KDE版桌面的Manjaro操作系统的相关记录">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-11-09T11:21:24.000Z">
+<meta property="article:modified_time" content="2023-10-07T06:39:59.506Z">
+<meta property="article:author" content="OneEarMouse">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://codesh.xyz/2019/11/09/ManjaroConfig/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Manjaro 配置方法个人记录 | OneEarMouse's Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">OneEarMouse's Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员一只耳</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://codesh.xyz/2019/11/09/ManjaroConfig/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="OneEarMouse">
+      <meta itemprop="description" content="程序员一只耳的个人编程问题记录存档，仅供参考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OneEarMouse's Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Manjaro 配置方法个人记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-09 19:21:24" itemprop="dateCreated datePublished" datetime="2019-11-09T19:21:24+08:00">2019-11-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-07 14:39:59" itemprop="dateModified" datetime="2023-10-07T14:39:59+08:00">2023-10-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ArchLinux/" itemprop="url" rel="index"><span itemprop="name">ArchLinux</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+            <div class="post-description">配置KDE版桌面的Manjaro操作系统的相关记录</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Manjaro是一个目前广泛是使用的Arch Linux发行版，在各种方面都十分优秀。其最大优势在在于丰富的官方Wiki给出各种组件的介绍与问题解决办法，各种问题都可以轻松解决。其他优势网上有更相近描述。这里不再赘述。Manjaro的官方提供使用不同启动器的多种版本，有XFCE，KDE，GNOME等。还有使用国人操作系统桌面的Deepin桌面。其中，XFCE较轻便，但功能不够丰富。GNOME桌面十分华丽，但响应速度上没有优势。而Deepin桌面是类macos桌面，界面十分优秀，也比较符合国人操作习惯。但在我个人的电脑上出现了许多问题，如触摸板灵敏度无法调节到比较顺手的程度，Wifi断连等问题。因此个人最后选择了KDE桌面，在响应速度和操作上都有不错的表现。</p>
+<h1 id="系统安装">1. 系统安装</h1><p>这一步类似其他操作系统，直接从官方下载操作系统ISO文件并写入U盘进行安装即可。Manjaro的设置界面非常直观，基本不需要过多介绍。这里我跳过不是重点的这部分。记得把\boot\efi挂到efi分区就行。同时我这里选择安装english-us系统，后期再在系统中添加中文字体。</p>
+<h1 id="Pacman的使用">2. Pacman的使用</h1><p>pacman软件包管理器是 Arch Linux 的一大亮点。它将一个简单的二进制包格式和易用的构建系统结合了起来(参见makepkg和ABS)。不管软件包是来自官方的 Arch 库还是用户自己创建，pacman 都能方便地管理。pacman 通过和主服务器同步软件包列表来进行系统更新。这种服务器&#x2F;客户端模式可以使用一条命令就下载或安装软件包，同时安装必需的依赖包。更具体的操作可以查阅Arch Linux官方Wiki。</p>
+<h2 id="用法">2.1. 用法</h2><h3 id="安装软件包">2.1.1. 安装软件包</h3><p>安装或者升级单个软件包，或者一列软件包（包含依赖包），使用如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S package_name1 package_name2 ...</span><br></pre></td></tr></table></figure>
+<p>安装本地安装包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -U file_name</span><br></pre></td></tr></table></figure>
+<h3 id="删除软件包">2.1.2. 删除软件包</h3><p>删除单个软件包，保留其全部已经安装的依赖关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -R package_name</span><br></pre></td></tr></table></figure>
+<p>删除指定软件包，及其所有没有被其他已安装软件包使用的依赖关系：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Rs package_name</span><br></pre></td></tr></table></figure>
+<h3 id="升级系统">2.1.3. 升级系统</h3><p>一个 pacman 命令就可以升级整个系统。花费的时间取决于系统有多老。这个命令会同步非本地(local)软件仓库并升级系统的软件包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Syu</span><br></pre></td></tr></table></figure>
+<p>升级内核</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Syyuu</span><br></pre></td></tr></table></figure>
+<h3 id="查询软件包">2.1.4. 查询软件包</h3><p>要查询已安装的软件包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Qs string1 string2 ...</span><br></pre></td></tr></table></figure>
+<h3 id="删除多余">2.1.5. 删除多余</h3><p>要罗列所有明确安装而且不被其它包依赖的软件包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Qet</span><br></pre></td></tr></table></figure>
+<h3 id="清理缓存">2.1.6. 清理缓存</h3><p>pacman 将下载的软件包保存在 &#x2F;var&#x2F;cache&#x2F;pacman&#x2F;pkg&#x2F; 并且不会自动移除旧的和未安装版本的软件包，因此需要手动清理，以免该文件夹过于庞大。</p>
+<p>使用内建选项即可清除未安装软件包的缓存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Sc</span><br></pre></td></tr></table></figure>
+<p>pacman-contrib 提供的 paccache 命令默认会删除近3个版本前的软件包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paccache -r</span><br></pre></td></tr></table></figure>
+
+<h1 id="系统升级">3. 系统升级</h1><p>使用该命令升级系统。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Syu</span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Syyuu</span><br></pre></td></tr></table></figure>
+
+<h1 id="添加archlinuxcn源">4. 添加archlinuxcn源</h1><p>打开&#x2F;etc&#x2F;pacman.conf，在底部添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[archlinuxcn]</span><br><span class="line">SigLevel &#x3D; Optional</span><br><span class="line">Server &#x3D; http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;archlinuxcn&#x2F;$arch</span><br></pre></td></tr></table></figure>
+<p>Server可以自己测速选择别的服务器。这里SigLevel为默认的Optional，需要签名认证，因此使用如下命令更新签名。最后更新源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S archlinuxcn-keyring</span><br><span class="line">sudo pacman -Syy</span><br></pre></td></tr></table></figure>
+
+<h1 id="软件配置">5. 软件配置</h1><h2 id="AUR相关配置">5.1. AUR相关配置</h2><p>Manjaro的软件源包含的软件非常丰富，安装也非常简单，官方源里无法找到软件，也可以在AUR里搜索。这里我们安装yay来获取aur软件包。注：yaurt已经过时，不建议安装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S yay</span><br></pre></td></tr></table></figure>
+<p>用法与pacman类似。注：使用yay时，不需要sudo权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yay -Ss &lt;关键字&gt;	#搜索含有关键字的软件</span><br><span class="line">yay -S &lt;软件名&gt;	#安装软件</span><br><span class="line">yaourt &lt;关键字&gt; #搜索软件包</span><br></pre></td></tr></table></figure>
+<h2 id="Vim及文本编辑">5.2. Vim及文本编辑</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S vim</span><br><span class="line">sudo pacman -S gedit</span><br></pre></td></tr></table></figure>
+
+<h2 id="中文输入法">5.3. 中文输入法</h2><p>我们使用fcitx框架来配置输入法。这里我们选用google拼音，也可以自行选择其他。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S fcitx-im</span><br><span class="line">sudo pacman -S fcitx-configtool</span><br><span class="line">sudo pacman -S fcitx-googlepinyin</span><br></pre></td></tr></table></figure>
+<p>之后按照官方文档，在‘~&#x2F;.pam_environment’中，加入以下内容，并重启使环境变量生效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GTK_IM_MODULE&#x3D;fcitx</span><br><span class="line">QT_IM_MODULE&#x3D;fcitx</span><br><span class="line">XMODIFIERS&#x3D;@im&#x3D;fcitx</span><br></pre></td></tr></table></figure>
+<p>之后系统会自动启动fcitx，在输入法中选择添加输入法，选择显示所有输入法，将google拼音加切换输入法（注：第一个输入法需设置为键盘格式）</p>
+<h2 id="Chrome">5.4. Chrome</h2><p>安装Chrome或chromium</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S google-chrome</span><br><span class="line">sudo pacman -S chromium</span><br></pre></td></tr></table></figure>
+
+<h2 id="QQ">5.5. QQ</h2><p>使用如下命令可直接安装deepin移植的tim</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S deepin.com.qq.office</span><br></pre></td></tr></table></figure>
+<p>注意，KDE版直接安装无法启动。需要先安装gnome-settings-daemon，然后在settings-&gt;start up and shutdown中添加&#x2F;usr&#x2F;lib&#x2F;gsd-xsettings设置为自动启动。重启系统即可使用。</p>
+<h2 id="微信">5.6. 微信</h2><p>微信的源没有直接加入pacman库，在<a target="_blank" rel="noopener" href="https://aur.archlinux.org/packages/deepin-wine-wechat/">https://aur.archlinux.org/packages/deepin-wine-wechat/</a> 下载source code。使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -U #下载的包名</span><br></pre></td></tr></table></figure>
+<p>直接安装后无法使用。需要在&#x2F;opt&#x2F;deepinwine&#x2F;apps&#x2F;Deepin-WeChat&#x2F;run.sh 中，将WINE_CMD属性改为：WINE_CMD&#x3D;”deepin-wine”，用来调用deepin-wine桌面。此时能够正常启动，但大约1分钟后会闪退。参照<a target="_blank" rel="noopener" href="https://github.com/countstarlight/deepin-wine-wechat-arch/issues/32">https://github.com/countstarlight/deepin-wine-wechat-arch/issues/32</a>。因为新版微信的小程序员会导致闪退，使用空文件替换~&#x2F;.deepinwine&#x2F;Deepin-WeChat&#x2F;drive_c&#x2F;Program Files&#x2F;Tecent&#x2F;WeChat&#x2F;WeChatApp.exe，之后即可正常使用微信</p>
+<h2 id="PDF">5.7. PDF</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yay -S foxitreader</span><br><span class="line">yay -S evince</span><br></pre></td></tr></table></figure>
+
+<h3 id="ZSH">5.7.1. ZSH</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S zsh</span><br><span class="line">sudo pacman -S oh-my-zsh-git</span><br><span class="line">cp &#x2F;usr&#x2F;share&#x2F;oh-my-zsh&#x2F;zshrc ~&#x2F;.zshrc #ohmyzsh配置文件</span><br><span class="line">chsh -s &#x2F;bin&#x2F;zsh #替换默认shell</span><br></pre></td></tr></table></figure>
+<h3 id="网易云音乐">5.7.2. 网易云音乐</h3><p>直接可用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S netease-cloud-music</span><br></pre></td></tr></table></figure>
+
+<p>至此，manjaro使用环境基本完成。进一步配置请期待后文</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>OneEarMouse
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://codesh.xyz/2019/11/09/ManjaroConfig/" title="Manjaro 配置方法个人记录">http://codesh.xyz/2019/11/09/ManjaroConfig/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/20/BuildRecord-Vol2/" rel="prev" title="在github使用hexo搭建博客记录Vol.2">
+      <i class="fa fa-chevron-left"></i> 在github使用hexo搭建博客记录Vol.2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/02/Hexo-Sync/" rel="next" title="hexo多终端同步配置">
+      hexo多终端同步配置 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85"><span class="nav-text">1. 系统安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pacman%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">2. Pacman的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%B3%95"><span class="nav-text">2.1. 用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-text">2.1.1. 安装软件包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-text">2.1.2. 删除软件包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E7%B3%BB%E7%BB%9F"><span class="nav-text">2.1.3. 升级系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-text">2.1.4. 查询软件包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%A4%9A%E4%BD%99"><span class="nav-text">2.1.5. 删除多余</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%85%E7%90%86%E7%BC%93%E5%AD%98"><span class="nav-text">2.1.6. 清理缓存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8D%87%E7%BA%A7"><span class="nav-text">3. 系统升级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0archlinuxcn%E6%BA%90"><span class="nav-text">4. 添加archlinuxcn源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="nav-text">5. 软件配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AUR%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="nav-text">5.1. AUR相关配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vim%E5%8F%8A%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91"><span class="nav-text">5.2. Vim及文本编辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95"><span class="nav-text">5.3. 中文输入法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chrome"><span class="nav-text">5.4. Chrome</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#QQ"><span class="nav-text">5.5. QQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1"><span class="nav-text">5.6. 微信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PDF"><span class="nav-text">5.7. PDF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ZSH"><span class="nav-text">5.7.1. ZSH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90"><span class="nav-text">5.7.2. 网易云音乐</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="OneEarMouse"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">OneEarMouse</p>
+  <div class="site-description" itemprop="description">程序员一只耳的个人编程问题记录存档，仅供参考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">OneEarMouse</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">142k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

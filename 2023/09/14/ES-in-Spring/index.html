@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codesh.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="简单记录如何在SpringBoot项目中引入ElasticSearch搜索引擎">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在SpringBoot中整合ElasticSearch">
+<meta property="og:url" content="http://codesh.xyz/2023/09/14/ES-in-Spring/index.html">
+<meta property="og:site_name" content="OneEarMouse&#39;s Page">
+<meta property="og:description" content="简单记录如何在SpringBoot项目中引入ElasticSearch搜索引擎">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-14T15:27:44.000Z">
+<meta property="article:modified_time" content="2023-10-07T06:39:59.496Z">
+<meta property="article:author" content="OneEarMouse">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://codesh.xyz/2023/09/14/ES-in-Spring/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>在SpringBoot中整合ElasticSearch | OneEarMouse's Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">OneEarMouse's Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员一只耳</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://codesh.xyz/2023/09/14/ES-in-Spring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="OneEarMouse">
+      <meta itemprop="description" content="程序员一只耳的个人编程问题记录存档，仅供参考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OneEarMouse's Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在SpringBoot中整合ElasticSearch
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-14 23:27:44" itemprop="dateCreated datePublished" datetime="2023-09-14T23:27:44+08:00">2023-09-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-07 14:39:59" itemprop="dateModified" datetime="2023-10-07T14:39:59+08:00">2023-10-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ElasticSearch/" itemprop="url" rel="index"><span itemprop="name">ElasticSearch</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+            <div class="post-description">简单记录如何在SpringBoot项目中引入ElasticSearch搜索引擎</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="依赖及相关配置">1. 依赖及相关配置</h1><ol>
+<li>在pom.xml中引入依赖<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-elasticsearch<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>application.yml配置<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">elasticsearch:</span></span><br><span class="line">    <span class="attr">rest:</span></span><br><span class="line">      <span class="comment"># 如果是集群，用逗号隔开</span></span><br><span class="line">      <span class="attr">uris:</span> <span class="string">http://ip:port</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">xxx</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">yyy</span></span><br><span class="line">      <span class="attr">connection-timeout:</span> <span class="number">3000</span></span><br><span class="line">      <span class="attr">read-timeout:</span> <span class="number">1000</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>注：在ES7.1.5版本后，使用RestHighLevelClient已经被标为过时并放弃，因此这里不再介绍。本文主要介绍使用ElasticsearchRestTemplate和使用ElasticsearchRepository的方法</p>
+<h1 id="创建对应实体类">2. 创建对应实体类</h1><p>创建一个实体类，例子如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Document(indexName = &quot;file_record&quot;, shards = 2, replicas = 0)</span></span><br><span class="line"><span class="meta">@Setting(settingPath = &quot;ElasticSearch/settings.json&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileRecordESInfo</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Field(name = &quot;id&quot;, type = FieldType.Keyword)</span></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;task_uuid&quot;, type = FieldType.Keyword)</span></span><br><span class="line">    <span class="keyword">private</span> String taskUuid;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;file_name&quot;, type = FieldType.Text, analyzer = &quot;custom_analyzer&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String fileName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;file_size&quot;, type = FieldType.Long, index = false)</span></span><br><span class="line">    <span class="keyword">private</span> Long fileSize;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;file_type&quot;, type = FieldType.Integer)</span></span><br><span class="line">    <span class="keyword">private</span> Integer fileType;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;file_create_time&quot;, type = FieldType.Date, format = DateFormat.epoch_millis)</span></span><br><span class="line">    <span class="keyword">private</span> Date fileCreateTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;tag_list&quot;, type = FieldType.Nested)</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Tag&gt; tagList;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Data</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Tag</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Field(name = &quot;tag_id&quot;, type = FieldType.Keyword)</span></span><br><span class="line">        <span class="keyword">private</span> String tagId;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Field(name = &quot;tag_name&quot;, type = FieldType.Keyword)</span></span><br><span class="line">        <span class="keyword">private</span> String tagName;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Field(name = &quot;tag_type&quot;, type = FieldType.Integer, index = false)</span></span><br><span class="line">        <span class="keyword">private</span> Integer tagType;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Field(name = &quot;tag_set_time&quot;, type = FieldType.Date, format = DateFormat.epoch_millis, index = false)</span></span><br><span class="line">        <span class="keyword">private</span> Date tagSetTime;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li>@Document()注解可指定对应index，分片数量等</li>
+<li>@Field()注解可指定字段在es索引中的名称及属性等，并指定是否需要被索引</li>
+<li>注解中的字段属性、索引等值的选取，需仔细思考后赋值</li>
+</ul>
+<h1 id="使用ElasticsearchRepository">3. 使用ElasticsearchRepository</h1><p>ElasticsearchRepository接口封装了Document的CRUD操作。对于需要在es中操作的实体类，如果在application.yml中已经配置了<code>spring.elasticsearch</code>相关属性，则可以直接通过ElasticsearchRepository实现CRUD操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ESFileRecordRepository</span> <span class="keyword">extends</span> <span class="title">ElasticsearchRepository</span>&lt;<span class="title">FileRecordESInfo</span>, <span class="title">String</span>&gt; </span>&#123;</span><br><span class="line">  <span class="comment">// add other methods here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常见的可调用接口如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NoRepositoryBean</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">CrudRepository</span>&lt;<span class="title">T</span>, <span class="title">ID</span>&gt; <span class="keyword">extends</span> <span class="title">Repository</span>&lt;<span class="title">T</span>, <span class="title">ID</span>&gt; </span>&#123;</span><br><span class="line">    &lt;S extends T&gt; <span class="function">S <span class="title">save</span><span class="params">(S entity)</span></span>;</span><br><span class="line"></span><br><span class="line">    &lt;S extends T&gt; <span class="function">Iterable&lt;S&gt; <span class="title">saveAll</span><span class="params">(Iterable&lt;S&gt; entities)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">Optional&lt;T&gt; <span class="title">findById</span><span class="params">(ID id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">existsById</span><span class="params">(ID id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">Iterable&lt;T&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">Iterable&lt;T&gt; <span class="title">findAllById</span><span class="params">(Iterable&lt;ID&gt; ids)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">count</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deleteById</span><span class="params">(ID id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">(T entity)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deleteAllById</span><span class="params">(Iterable&lt;? extends ID&gt; ids)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deleteAll</span><span class="params">(Iterable&lt;? extends T&gt; entities)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deleteAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，我们可以这样调用。以下是调用批量保存的例子。其他方法的逻辑类似</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ESService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ESCollectRecordRepository esCollectRecordRepository;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveRecordESInfoList</span><span class="params">(List&lt;RecordESInfo&gt; recordESInfoList)</span> </span>&#123;</span><br><span class="line">        esCollectRecordRepository.saveAll(recordESInfoList);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意：">3.1. 注意：</h2><h3 id="索引初始化问题">3.1.1. 索引初始化问题</h3><p>如果连接到的ES中不存在对应实体类的索引，那么Spring会在启动时，将连接的所有ES实例中按照所有ElasticsearchRepository创建空索引。在实际生产环境中部署时，需要注意这点！</p>
+<h3 id="查询问题">3.1.2. 查询问题</h3><p>该CURD接口无法使用复杂的查询，我们需要另外配置查询相关内容</p>
+<h1 id="使用ElasticsearchRestTemplate">4. 使用ElasticsearchRestTemplate</h1><h2 id="引入">4.1. 引入</h2><p>如果在application.yml中已经配置了<code>spring.elasticsearch</code>相关属性。则可以在service中直接引入，例如批量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ESService</span></span>&#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  <span class="keyword">private</span> ElasticsearchRestTemplate elasticsearchRestTemplate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用">4.2. 使用</h2><p>elasticsearchRestTemplate中也对应了许多预定义操作，可以直接通过<code>org.springframework.data.elasticsearch.core</code>中的源码查看，这里仅介绍查询相关，其他功能不再赘述。</p>
+<h2 id="查询">4.3. 查询</h2><p>在<code>org.springframework.data.elasticsearch.core.query</code>中实现了Query类及其子类。我们可以通过其中的类组装ES的查询参数，再通过<code>elasticsearchRestTemplate.search</code>进行es的查询。以下是一个分页查询及不同子类型查询的例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> PageVo&lt;RecordESInfo&gt; <span class="title">searchRecordESInfo</span><span class="params">(PageVo&lt;RecordESInfo&gt; pageVo, RecordQueryParam recordQueryParam)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 创建布尔查询构造器，对应ES中布尔查询（各个子句之间的逻辑关系是与的查询）</span></span><br><span class="line">        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * 根据recordQueryParam中的查询参数，给布尔查询中添加查询参数。</span></span><br><span class="line"><span class="comment">        * 以下是一些查询的列子</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="comment">// matchQuery类型查询，会走倒查索引</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(recordQueryParam.getFileNamePattern())) &#123;</span><br><span class="line">            boolQueryBuilder.must(QueryBuilders.matchQuery(<span class="string">&quot;file_name&quot;</span>, recordQueryParam.getFileNamePattern()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 时间类型查询</span></span><br><span class="line">        <span class="keyword">if</span> (recordQueryParam.getStartTime() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            String startDate = String.valueOf(recordQueryParam.getStartTime().getTime());</span><br><span class="line">            boolQueryBuilder.must(QueryBuilders.rangeQuery(<span class="string">&quot;file_create_time&quot;</span>).gte(startDate));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (recordQueryParam.getEndTime() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            String endDate = String.valueOf(recordQueryParam.getEndTime().getTime());</span><br><span class="line">            boolQueryBuilder.must(QueryBuilders.rangeQuery(<span class="string">&quot;file_create_time&quot;</span>).lte(endDate));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 完全匹配查询</span></span><br><span class="line">        <span class="keyword">if</span> (recordQueryParam.getFileType() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            boolQueryBuilder.must(QueryBuilders.termQuery(<span class="string">&quot;file_type&quot;</span>, recordQueryParam.getFileType()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// nest类型查询，对应实体类中的子类</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(recordQueryParam.getTagId())) &#123;</span><br><span class="line">            boolQueryBuilder.must(QueryBuilders.nestedQuery(<span class="string">&quot;tag_list&quot;</span>,</span><br><span class="line">                    QueryBuilders.matchPhraseQuery(<span class="string">&quot;tag_list.tag_id&quot;</span>, recordQueryParam.getTagId()), ScoreMode.None));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 同样是nest类型查询</span></span><br><span class="line">        <span class="comment">// 字符查询可通过使用wildcard进行类似MySQl的LIKE查询</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(recordQueryParam.getTagNamePattern())) &#123;</span><br><span class="line">            boolQueryBuilder.must(QueryBuilders.nestedQuery(<span class="string">&quot;tag_list&quot;</span>,</span><br><span class="line">                    QueryBuilders.wildcardQuery(<span class="string">&quot;tag_list.tag_name&quot;</span>, <span class="string">&quot;*&quot;</span> + recordQueryParam.getTagNamePattern() + <span class="string">&quot;*&quot;</span>), ScoreMode.None));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建 NativeSearchQuery 对象并设置排序与分页参数</span></span><br><span class="line">        NativeSearchQuery searchQuery = <span class="keyword">new</span> NativeSearchQueryBuilder().withQuery(boolQueryBuilder)</span><br><span class="line">                .withSorts(SortBuilders.fieldSort(<span class="string">&quot;file_create_time&quot;</span>).order(SortOrder.DESC))</span><br><span class="line">                .withPageable(PageRequest.of(pageVo.getCurrent(), pageVo.getSize()))</span><br><span class="line">                .withTrackTotalHits(<span class="keyword">true</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 执行查询</span></span><br><span class="line">            SearchHits&lt;RecordESInfo&gt; searchHits = elasticsearchRestTemplate.search(searchQuery, RecordESInfo.class);</span><br><span class="line">            <span class="comment">// 获取查询中的结果及分页参数</span></span><br><span class="line">            <span class="keyword">if</span> (searchHits.getTotalHits() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                List&lt;RecordESInfo&gt; searchProductList = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());</span><br><span class="line">                pageVo.setTotal(searchHits.getTotalHits());</span><br><span class="line">                pageVo.setPages((<span class="keyword">int</span>) Math.ceil((<span class="keyword">double</span>) pageVo.getTotal() / pageVo.getSize()));</span><br><span class="line">                pageVo.setRecords(searchProductList);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                pageVo.setTotal(<span class="number">0L</span>);</span><br><span class="line">                pageVo.setPages(<span class="number">0</span>);</span><br><span class="line">                pageVo.setRecords(<span class="keyword">new</span> ArrayList&lt;&gt;());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// todo 处理查询中异常</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pageVo;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入参数，调用searchRecordESInfo，即可完成一次分页查询</p>
+<h1 id="自定义索引Setting">5. 自定义索引Setting</h1><ol>
+<li>创建setting.json，放到resources目录下，用于存放配置<br>例如这里创建一个自定义分词器，放在resources目录中的ElasticSearch目录下<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	  <span class="attr">&quot;analysis&quot;</span>: &#123;</span><br><span class="line">	    <span class="attr">&quot;analyzer&quot;</span>: &#123;</span><br><span class="line">	      <span class="attr">&quot;url_analyzer&quot;</span>: &#123;</span><br><span class="line">	        <span class="attr">&quot;tokenizer&quot;</span>: <span class="string">&quot;standard&quot;</span>,</span><br><span class="line">	        <span class="attr">&quot;char_filter&quot;</span>: [</span><br><span class="line">	          <span class="string">&quot;url_char_filter&quot;</span></span><br><span class="line">	        ]</span><br><span class="line">	      &#125;</span><br><span class="line">	    &#125;,</span><br><span class="line">	    <span class="attr">&quot;char_filter&quot;</span>: &#123;</span><br><span class="line">	      <span class="attr">&quot;url_char_filter&quot;</span>: &#123;</span><br><span class="line">	        <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;pattern_replace&quot;</span>,</span><br><span class="line">	        <span class="attr">&quot;pattern&quot;</span>: <span class="string">&quot;\\.&quot;</span>,</span><br><span class="line">	        <span class="attr">&quot;replacement&quot;</span>: <span class="string">&quot;-&quot;</span></span><br><span class="line">	      &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	  &#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></li>
+<li>在对应ES的实体类上加入<code>@Setting</code>注解，填写对应路径。这里使用刚才第一步中创建的<code>ElasticSearch/setting.json</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Document(indexName = &quot;es_info&quot;)</span></span><br><span class="line"><span class="meta">@Setting(settingPath = &quot;ElasticSearch/settings.json&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ESInfo</span></span>&#123;</span><br><span class="line">    <span class="comment">// data</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>使用类似如下语句创建索引<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">elasticsearchRestTemplate.indexOps(RecordESInfo.class).create(); <span class="comment">// 创建实体类对应索引</span></span><br><span class="line">elasticsearchRestTemplate.indexOps(RecordESInfo.class).putMapping(); <span class="comment">// 创建实体类对应索引mapping</span></span><br><span class="line">elasticsearchRestTemplate.indexOps(RecordESInfo.class).createSettings(); <span class="comment">// 创建对应索引设置</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>OneEarMouse
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://codesh.xyz/2023/09/14/ES-in-Spring/" title="在SpringBoot中整合ElasticSearch">http://codesh.xyz/2023/09/14/ES-in-Spring/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/03/Redis-as-MQ/" rel="prev" title="Redis作为消息队列的几种方法">
+      <i class="fa fa-chevron-left"></i> Redis作为消息队列的几种方法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/09/14/ES-custom-analyzer/" rel="next" title="ElasticSearch自定义分词器">
+      ElasticSearch自定义分词器 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%8F%8A%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="nav-text">1. 依赖及相关配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E5%BA%94%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="nav-text">2. 创建对应实体类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ElasticsearchRepository"><span class="nav-text">3. 使用ElasticsearchRepository</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A"><span class="nav-text">3.1. 注意：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%9D%E5%A7%8B%E5%8C%96%E9%97%AE%E9%A2%98"><span class="nav-text">3.1.1. 索引初始化问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E9%97%AE%E9%A2%98"><span class="nav-text">3.1.2. 查询问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ElasticsearchRestTemplate"><span class="nav-text">4. 使用ElasticsearchRestTemplate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-text">4.1. 引入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">4.2. 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2"><span class="nav-text">4.3. 查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B4%A2%E5%BC%95Setting"><span class="nav-text">5. 自定义索引Setting</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="OneEarMouse"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">OneEarMouse</p>
+  <div class="site-description" itemprop="description">程序员一只耳的个人编程问题记录存档，仅供参考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">OneEarMouse</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">142k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

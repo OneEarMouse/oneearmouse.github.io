@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codesh.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="使用hexo搭建本网站的具体步骤记录第二部分,主要讲述hexo配置与next主题的使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在github使用hexo搭建博客记录Vol.2">
+<meta property="og:url" content="http://codesh.xyz/2019/06/20/BuildRecord-Vol2/index.html">
+<meta property="og:site_name" content="OneEarMouse&#39;s Page">
+<meta property="og:description" content="使用hexo搭建本网站的具体步骤记录第二部分,主要讲述hexo配置与next主题的使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://codesh.xyz/.xyz//config.png">
+<meta property="og:image" content="http://codesh.xyz/.xyz//config2.png">
+<meta property="og:image" content="http://codesh.xyz/.xyz//example.jpg">
+<meta property="og:image" content="http://codesh.xyz/.xyz//next_config.png">
+<meta property="article:published_time" content="2019-06-20T11:41:17.000Z">
+<meta property="article:modified_time" content="2023-10-07T06:39:59.493Z">
+<meta property="article:author" content="OneEarMouse">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codesh.xyz/.xyz//config.png">
+
+<link rel="canonical" href="http://codesh.xyz/2019/06/20/BuildRecord-Vol2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>在github使用hexo搭建博客记录Vol.2 | OneEarMouse's Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">OneEarMouse's Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员一只耳</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://codesh.xyz/2019/06/20/BuildRecord-Vol2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="OneEarMouse">
+      <meta itemprop="description" content="程序员一只耳的个人编程问题记录存档，仅供参考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OneEarMouse's Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在github使用hexo搭建博客记录Vol.2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-20 19:41:17" itemprop="dateCreated datePublished" datetime="2019-06-20T19:41:17+08:00">2019-06-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-07 14:39:59" itemprop="dateModified" datetime="2023-10-07T14:39:59+08:00">2023-10-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+            <div class="post-description">使用hexo搭建本网站的具体步骤记录第二部分,主要讲述hexo配置与next主题的使用</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考资料：</p>
+<ul>
+<li>Hexo搭建独立博客全纪录（三）使用Hexo搭建博客: <a target="_blank" rel="noopener" href="https://baoyuzhang.github.io/2017/05/12/%E3%80%90Hexo%E6%90%AD%E5%BB%BA%E7%8B%AC%E7%AB%8B%E5%8D%9A%E5%AE%A2%E5%85%A8%E7%BA%AA%E5%BD%95%E3%80%91%EF%BC%88%E4%B8%89%EF%BC%89%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/">链接</a></li>
+<li>NexT主题的优化定制修改指南: <a target="_blank" rel="noopener" href="https://blog.csdn.net/u012195214/article/details/79204088">链接</a></li>
+<li>Next官方页面：<a target="_blank" rel="noopener" href="https://github.com/theme-next">链接</a></li>
+</ul>
+<h1 id="Hexo使用">1. Hexo使用</h1><h2 id="页面配置">1.1. 页面配置</h2><p>hexo文件夹下的配置文件<code>_config.yml</code>为整个hexo的配置文件。首先第一段属性主要用于配置网站的整体信息，description和keywords用于SEO搜索引擎优化，可以暂时不管。<br><img src="/.xyz//config.png" alt="config"></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>title</td>
+<td>网站标题</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>网站副标题</td>
+</tr>
+<tr>
+<td>description</td>
+<td>网站描述</td>
+</tr>
+<tr>
+<td>keywords</td>
+<td>网站关键词</td>
+</tr>
+<tr>
+<td>author</td>
+<td>网站作者</td>
+</tr>
+<tr>
+<td>language</td>
+<td>网站使用的语言(中文为zh-CN)</td>
+</tr>
+<tr>
+<td>timezone</td>
+<td>网站时区，默认为电脑时区</td>
+</tr>
+</tbody></table>
+<p>第二部分的配置有关网站的写作布局格式以及资源链接功能<br><img src="/.xyz//config2.png" alt="config2"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># Writing</span><br><span class="line">new_post_name: :title.md    #新文章的名称</span><br><span class="line">default_layout: post    #默认的文章格式</span><br><span class="line">titlecase: false # Transform title into titlecase   #标题转换为首字母大写</span><br><span class="line">external_link: true # Open external links in new tab    #新标签中打开链接</span><br><span class="line">filename_case: 0    #文件名转换为（0）不变（1）小写（2）大写</span><br><span class="line">render_drafts: false    #显示草稿</span><br><span class="line">post_asset_folder: true #对每篇文章生成asset文件夹</span><br><span class="line">relative_link: false</span><br><span class="line">future: true    #显示上一篇与下一篇文章文章</span><br><span class="line">highlight:#代码块相关</span><br><span class="line">  enable: true          #允许使用代码块</span><br><span class="line">  line_number: true     #显示行号</span><br><span class="line">  auto_detect: false    #自动检测</span><br><span class="line">  tab_replace:          #tab替换</span><br></pre></td></tr></table></figure>
+
+<h2 id="Hexo常用命令">1.2. Hexo常用命令</h2><p>常用命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;postName&quot; #新建文章</span><br><span class="line">hexo generate #生成静态页面至public目录</span><br><span class="line">hexo server #开启预览访问端口（默认端口4000，&#39;ctrl + c&#39;关闭server）</span><br><span class="line">hexo deploy #部署到GitHub</span><br><span class="line">hexo help  # 查看帮助</span><br><span class="line">hexo clean #清除当前生成的所有页面，用于配合generate重新生成，去除bug</span><br><span class="line">hexo version  #查看Hexo的版本</span><br></pre></td></tr></table></figure>
+<p>常用命令缩写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo n &#x3D;&#x3D; hexo new</span><br><span class="line">hexo g &#x3D;&#x3D; hexo generate</span><br><span class="line">hexo s &#x3D;&#x3D; hexo server</span><br><span class="line">hexo d &#x3D;&#x3D; hexo deploy</span><br></pre></td></tr></table></figure>
+<p>组合命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo s -g #生成并本地预览</span><br><span class="line">hexo d -g #生成并上传</span><br></pre></td></tr></table></figure>
+
+<h2 id="新建页面">1.3. 新建页面</h2><p>执行<code>hexo new &#39;文章名&#39;</code>，hexo会帮我们在<code>..\hexo\source\_posts</code>下生成相关markdown文件,打开该文件就可以开始编辑博客了<br>其中的文件头有以下含义，注意每个属性冒号后都有空格</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">title: #文章名</span><br><span class="line">date: 2019-06-20 19:41:17</span><br><span class="line">categories: #分类</span><br><span class="line">tags: #文章标签 使用[tag1,tag2,tag3]的形式，</span><br><span class="line">description: #该文章简介</span><br></pre></td></tr></table></figure>
+<p>使用<code>hexo g</code>命令后，该markdown文件会在public文件夹中自动生成对应的html文件，之后会自动加入文章列表</p>
+<h2 id="页面模板">1.4. 页面模板</h2><p>在hexo根目录下有scaffold文件夹。Hexo会根据scaffold中的markdown文件为模板来新建文章。使用<code>hexo new 文章名</code>命令时，默认按照post.md为模板</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123;title&#125;&#125;</span><br><span class="line">date: &#123;&#123;date&#125;&#125;</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>例如，我想要默认生成的文件中加入categories这个属性，可以把这个模板改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123;title&#125;&#125;</span><br><span class="line">date: &#123;&#123;date&#125;&#125;</span><br><span class="line">tags:</span><br><span class="line">categories:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>同理，可以创建多个不同模板，使用<code>hexo new 模板名称 文章名</code>来调用不同模板</p>
+<h2 id="插入图片">1.5. 插入图片</h2><h3 id="我的做法">1.5.1. 我的做法</h3><ol>
+<li>首先，在hexo的<code>_config.yml</code>中将<code>post_asset_folder</code>设为true。这样每次创建新文章，hexo都会在source的post文件夹中创建同名的资源文件夹，用于存放图片等资源</li>
+<li>在hexo根目录执行<code>npm install hexo-asset-image --save</code>，安装图片地址转换的插件</li>
+<li>使用<code>hexo new XXX</code>生成文章时，在<code>source/_posts</code>中放入需要插入的图片</li>
+<li>在文章的markdown文件中使用如下格式插入图片：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![你想输入的替代文字](xxxx&#x2F;图片名.jpg)</span><br></pre></td></tr></table></figure></li>
+<li>检查生成的网页中是否成功</li>
+</ol>
+<h3 id="官方文档做法">1.5.2. 官方文档做法</h3><p>官网链接：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/asset-folders.html">https://hexo.io/zh-cn/docs/asset-folders.html</a></p>
+<blockquote>
+<p>通过常规的 markdown 语法和相对路径来引用图片和其它资源可能会导致它们在存档页或者主页上显示不正确。在Hexo 2时代，社区创建了很多插件来解决这个问题。但是，随着Hexo 3 的发布，许多新的标签插件被加入到了核心代码中。这使得你可以更简单地在文章中引用你的资源。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset_path slug %&#125;</span><br><span class="line">&#123;% asset_img slug [title] %&#125;</span><br><span class="line">&#123;% asset_link slug [title] %&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>比如说：当你打开文章资源文件夹功能后，你把一个 example.jpg 图片放在了你的资源文件夹中，如果通过使用相对路径的常规 markdown 语法 <img src="/.xyz//example.jpg"> ，它将 不会 出现在首页上。（但是它会在文章中按你期待的方式工作）<br>正确的引用图片方式是使用下列的标签插件而不是 markdown ：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset_img example.jpg This is an example image %&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>通过这种方式，图片将会同时出现在文章和主页以及归档页中。</p>
+</blockquote>
+<p>官方的做法需要在markdown文档中插入html标签，我个人认为这种方式并不好。所以我没有选择官方做法，而是继续采取markdown语句来插入。如果未来遇到无法插入的问题，会再尝试官方方法。</p>
+<h1 id="Next主题">2. Next主题</h1><p>现在，你学会了Hexo的基本操作，但是你可能还觉得你的网站不够好看。怎么办呢？我们可以在github上寻找主题来美化我们的网站。<br>这里我使用的是github使用排名第一的Next主题。</p>
+<h2 id="Next主题的安装">2.1. Next主题的安装</h2><h3 id="下载">2.1.1. 下载</h3><p>这里直接从github下载最新版本。如果这种方法不行，可以考虑下载release page中的zip解压到对应目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd hexo</span><br><span class="line">$ git clone https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next themes&#x2F;next</span><br></pre></td></tr></table></figure>
+<h3 id="启用">2.1.2. 启用</h3><p>在hexo目录下的<code>_config.yml</code>中，将<code>theme</code>字段的值改为<code>next</code>。这样Hexo会直接调用themes文件夹下的next主题包<br><img src="/.xyz//next_config.png" alt="next_config"><br>接着使用<code>hexo clean</code>清除缓存，使用<code>hexo g</code>重新编译。可以看到主题已经生效，能够显示最基本的helloworld页面了</p>
+<h2 id="Next配置">2.2. Next配置</h2><h3 id="主题设置">2.2.1. 主题设置</h3><p>Next提供了4个默认主题，在themes&#x2F;next&#x2F;_config.yml&#96;中搜索scheme关键字，可以看到如何配置。这里我选用了Pisces主题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># ---------------------------------------------------------------</span><br><span class="line"># Scheme Settings</span><br><span class="line"># ---------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"># Schemes</span><br><span class="line"># scheme: Muse</span><br><span class="line"># scheme: Mist</span><br><span class="line">scheme: Pisces</span><br><span class="line"># scheme: Gemini</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Muse：默认 Scheme，这是 NexT 最初的版本，黑白主调，大量留白</li>
+<li>Mist：Muse 的紧凑版本，整洁有序的单栏外观</li>
+<li>Pisces：双栏 Scheme，小家碧玉似的清新</li>
+<li>Gemini：左侧网站信息及目录，块+片段结构布局</li>
+</ul>
+<h3 id="动态背景">2.2.2. 动态背景</h3><p>你经常在别人博客上看到并眼馋的动态背景！就是这个。<br>在<code>themes/next/_config.yml</code>中搜索canvas关键字，可以看到如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># Canvas-nest</span><br><span class="line"># Dependencies: https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;theme-next-canvas-nest</span><br><span class="line">canvas_nest:</span><br><span class="line">  enable: true</span><br><span class="line">  onmobile: true # display on mobile or not</span><br><span class="line">  color: &quot;0,0,255&quot; # RGB values, use &#39;,&#39; to separate</span><br><span class="line">  opacity: 0.5 # the opacity of line: 0~1</span><br><span class="line">  zIndex: -1 # z-index property of the background</span><br><span class="line">  count: 50 # the number of lines</span><br><span class="line"></span><br><span class="line"># JavaScript 3D library.</span><br><span class="line"># Dependencies: https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;theme-next-three</span><br><span class="line"># three_waves</span><br><span class="line">three_waves: false</span><br><span class="line"># canvas_lines</span><br><span class="line">canvas_lines: false</span><br><span class="line"># canvas_sphere</span><br><span class="line">canvas_sphere: false</span><br></pre></td></tr></table></figure>
+<p>设置为true则开启动态背景。在具体属性中可以设置线条的样式。建议将count减少，防止低配置电脑打开的卡顿。同时还提供了3种3D动态背景，喜欢的可以自己尝试</p>
+<h3 id="当前浏览进度">2.2.3. 当前浏览进度</h3><p>修改<code>themes/next/_config.yml</code>， <code>scrollpercent</code> 值由 false 改为 true：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Scroll percent label in b2t button</span><br><span class="line">scrollpercent: true</span><br></pre></td></tr></table></figure>
+
+<h3 id="文章“分类”与“标签”的设置">2.2.4. 文章“分类”与“标签”的设置</h3><p>使用<code>hexo new page categories</code>建立categories，其中自动生成了<code>index.md</code>，修改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2019-06-20 17:06:31</span><br><span class="line">type: &quot;categories&quot;</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>对tags也进行同样操作，这样在Next主题的主页下就能进入“分类”和“标签”页面了。之后的内容会自动生成，可以不用管</p>
+<h3 id="“About”页面设置">2.2.5. “About”页面设置</h3><p>同理，使用<code>hexo new page about</code>来生成about页面，在index.md中可以编辑个人相关信息。</p>
+<h3 id="字数统计功能">2.2.6. 字数统计功能</h3><p>参考页面<a target="_blank" rel="noopener" href="https://github.com/theme-next/hexo-symbols-count-time">https://github.com/theme-next/hexo-symbols-count-time</a><br>新版本的Next主题中，插件重新整合，因此使用了新api。这里直接使用新api来进行字数统计</p>
+<ol>
+<li>安装<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-symbols-count-time --save</span><br></pre></td></tr></table></figure></li>
+<li>在hexo根目录下的<code>_config.yml</code>中，添加如下代码来启用word count功能。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">symbols_count_time:</span><br><span class="line"> symbols: true</span><br><span class="line"> time: true</span><br><span class="line"> total_symbols: true</span><br><span class="line"> total_time: true</span><br><span class="line"> exclude_codeblock: false</span><br></pre></td></tr></table></figure></li>
+<li>在Next主题中寻找相关代码进行配置 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">symbols_count_time:</span><br><span class="line">    separated_meta: true</span><br><span class="line">    item_text_post: true</span><br><span class="line">    item_text_total: false</span><br><span class="line">    awl: 2</span><br><span class="line">    wpm: 275</span><br><span class="line">    suffix: mins.</span><br></pre></td></tr></table></figure>
+ 其中，<code>awl</code>和<code>wpm</code>的值请参阅官方文档进行配置。<br> 如果页面中字数统计的文字出现了乱码，请打开<code>theme/next/languages</code>文件夹对自己选用的语言进行查看并debug</li>
+</ol>
+<h1 id="最后的话">3. 最后的话</h1><p>Next还有许多优化手段，这里就不一一写出（其实我也不会）。大家有兴趣的可以自己再去研究</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>OneEarMouse
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://codesh.xyz/2019/06/20/BuildRecord-Vol2/" title="在github使用hexo搭建博客记录Vol.2">http://codesh.xyz/2019/06/20/BuildRecord-Vol2/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/17/BuildRecord-Vol1/" rel="prev" title="在github使用hexo搭建博客记录Vol.1">
+      <i class="fa fa-chevron-left"></i> 在github使用hexo搭建博客记录Vol.1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/11/09/ManjaroConfig/" rel="next" title="Manjaro 配置方法个人记录">
+      Manjaro 配置方法个人记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hexo%E4%BD%BF%E7%94%A8"><span class="nav-text">1. Hexo使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E9%85%8D%E7%BD%AE"><span class="nav-text">1.1. 页面配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">1.2. Hexo常用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E9%A1%B5%E9%9D%A2"><span class="nav-text">1.3. 新建页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E6%A8%A1%E6%9D%BF"><span class="nav-text">1.4. 页面模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87"><span class="nav-text">1.5. 插入图片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E5%81%9A%E6%B3%95"><span class="nav-text">1.5.1. 我的做法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%81%9A%E6%B3%95"><span class="nav-text">1.5.2. 官方文档做法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Next%E4%B8%BB%E9%A2%98"><span class="nav-text">2. Next主题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Next%E4%B8%BB%E9%A2%98%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-text">2.1. Next主题的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-text">2.1.1. 下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8"><span class="nav-text">2.1.2. 启用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Next%E9%85%8D%E7%BD%AE"><span class="nav-text">2.2. Next配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE"><span class="nav-text">2.2.1. 主题设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%83%8C%E6%99%AF"><span class="nav-text">2.2.2. 动态背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E6%B5%8F%E8%A7%88%E8%BF%9B%E5%BA%A6"><span class="nav-text">2.2.3. 当前浏览进度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E2%80%9C%E5%88%86%E7%B1%BB%E2%80%9D%E4%B8%8E%E2%80%9C%E6%A0%87%E7%AD%BE%E2%80%9D%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-text">2.2.4. 文章“分类”与“标签”的设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9CAbout%E2%80%9D%E9%A1%B5%E9%9D%A2%E8%AE%BE%E7%BD%AE"><span class="nav-text">2.2.5. “About”页面设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1%E5%8A%9F%E8%83%BD"><span class="nav-text">2.2.6. 字数统计功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E8%AF%9D"><span class="nav-text">3. 最后的话</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="OneEarMouse"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">OneEarMouse</p>
+  <div class="site-description" itemprop="description">程序员一只耳的个人编程问题记录存档，仅供参考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">OneEarMouse</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">142k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

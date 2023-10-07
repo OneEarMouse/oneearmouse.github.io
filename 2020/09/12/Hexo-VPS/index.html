@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codesh.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="介绍如何将hexo部署到VPS上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo-VPS">
+<meta property="og:url" content="http://codesh.xyz/2020/09/12/Hexo-VPS/index.html">
+<meta property="og:site_name" content="OneEarMouse&#39;s Page">
+<meta property="og:description" content="介绍如何将hexo部署到VPS上">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-12T15:19:25.000Z">
+<meta property="article:modified_time" content="2023-10-07T06:39:59.499Z">
+<meta property="article:author" content="OneEarMouse">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://codesh.xyz/2020/09/12/Hexo-VPS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hexo-VPS | OneEarMouse's Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">OneEarMouse's Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员一只耳</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://codesh.xyz/2020/09/12/Hexo-VPS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="OneEarMouse">
+      <meta itemprop="description" content="程序员一只耳的个人编程问题记录存档，仅供参考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OneEarMouse's Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo-VPS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-12 23:19:25" itemprop="dateCreated datePublished" datetime="2020-09-12T23:19:25+08:00">2020-09-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-07 14:39:59" itemprop="dateModified" datetime="2023-10-07T14:39:59+08:00">2023-10-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+            <div class="post-description">介绍如何将hexo部署到VPS上</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近心血来潮，决定将原本托管在github的hexo静态页面搬运到vps上，这里记录一下如何实现。</p>
+<p>参考资料：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.xiaoweihuang.me/2018/11/05/deploy-hexo-to-vps/">https://www.xiaoweihuang.me/2018/11/05/deploy-hexo-to-vps/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/morethink/p/10867173.html">https://www.cnblogs.com/morethink/p/10867173.html</a></li>
+</ul>
+<h1 id="本地SSH配置">1. 本地SSH配置</h1><p>Hexo部署是通过git来完成的，而git又是基于ssh连接的，所以需要在本地和服务端进行ssh相关配置。</p>
+<p>如果之前没有使用git创建过ssh。需要打开git bash, 执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.email &quot;你的邮箱&quot;</span><br><span class="line">$ git config --global user.name &quot;你的用户名&quot;</span><br></pre></td></tr></table></figure>
+<p>这里的邮箱和用户名都是服务器用于记录git提交记录的，然后是本地端生成ssh Key：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;你的邮箱&quot; &#x2F;&#x2F; 执行这个命令会提示输入用于保存的密钥名</span><br><span class="line">和口令之类的，都不填</span><br></pre></td></tr></table></figure>
+<p>执行完后会在C:\Users\Administrator.ssh目录下生成id_rsa和id_rsa.pub两个文件，其中id_rsa.pub文件里的内容是等会要复制到服务器那里的<br>可以在git bash执行以下命令获取到id_rsa.pub文件里的内容。也可以直接用记事本之类的文本编辑器打开复制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat .ssh&#x2F;id_rsa.pub &#x2F;&#x2F; 执行后可以看到公钥内容</span><br></pre></td></tr></table></figure>
+
+<h1 id="VPS服务器配置">2. VPS服务器配置</h1><p>首先我们配置服务器上的SSH key。如果没有ssh，则自行安装。这里不再赘述</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 添加hexo用户（注：这里用户名应该可以随意修改，但有人说git用户更好，待调查）</span><br><span class="line">adduser hexo</span><br><span class="line"># 切换到hexo用户</span><br><span class="line">su hexo</span><br><span class="line"># 切换到hexo用户目录</span><br><span class="line">cd &#x2F;home&#x2F;hexo</span><br><span class="line"># 创建.ssh文件夹</span><br><span class="line">mkdir .ssh</span><br><span class="line"># 创建authorized_keys文件并编辑</span><br><span class="line">echo &quot;id_rsa.pub中的内容&quot; &gt; .ssh&#x2F;authorized_keys</span><br><span class="line"># 如果你还没有生成公钥，那么首先在本地电脑中执行 cat ~&#x2F;.ssh&#x2F;id_rsa.pub | pbcopy生成公钥</span><br><span class="line"># 修改相应权限</span><br><span class="line">chmod 600 .ssh&#x2F;authorized_keys</span><br><span class="line">chmod 700 .ssh</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置post-update钩子">3. 配置post-update钩子</h1><p>Git的钩子脚本位于版本库.git&#x2F;hooks目录下，当Git执行特定操作时会调用特定的钩子脚本。当版本库通过git init或者git clone创建时，会在.git&#x2F;hooks目录下创建示例脚本，用户可以参照示例脚本的写法开发适合的钩子脚本。</p>
+<p>钩子脚本要设置为可运行，并使用特定的名称。Git提供的示例脚本都带有.sample扩展名，是为了防止被意外运行。如果需要启用相应的钩子脚本，需要对其重命名（去掉.sample扩展名)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">post-update</span><br><span class="line">该钩子脚本由远程版本库的git receive-pack命令调用。当从本地版本库完成一个推送之后，即当所有引用都更新完毕后，在远程服务器上该钩子脚本被触发执行。</span><br></pre></td></tr></table></figure>
+
+<p>因此我们需要配置post-update钩子以便可以及时更新我们在VPS上存放Hexo 静态文件的目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 回到hexo目录</span><br><span class="line">cd &#x2F;home&#x2F;hexo</span><br><span class="line"># 变成hexo用户</span><br><span class="line">su hexo</span><br><span class="line"># 新建blog目录存放hexo静态文件</span><br><span class="line">mkdir &#x2F;home&#x2F;hexo&#x2F;blog</span><br><span class="line"># 使用hexo用户创建git裸仓库，以blog.git为例</span><br><span class="line">git init --bare blog.git</span><br><span class="line"># 进入钩子文件夹hooks</span><br><span class="line">cd blog.git&#x2F;hooks&#x2F;</span><br><span class="line"># 启用post-update</span><br><span class="line">mv post-update.sample post-update</span><br><span class="line"># 添加执行权限</span><br><span class="line">chmod +x post-update</span><br><span class="line"># 配置post-update</span><br><span class="line">vim post-update</span><br></pre></td></tr></table></figure>
+
+<p>注释如下行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec git update-server-info</span><br></pre></td></tr></table></figure>
+<p>添加如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git --work-tree&#x3D;&quot;静态文件VPS存放目录&quot; --git-dir&#x3D;&quot;刚才新建的VPS git地址&quot; checkout -f</span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git --work-tree&#x3D;&#x2F;home&#x2F;hexo&#x2F;blog --git-dir&#x3D;&#x2F;home&#x2F;hexo&#x2F;blog.git checkout -f</span><br></pre></td></tr></table></figure>
+
+<p>当然，这里直接放在&#x2F;home目录不太妥当，也可以放在其他文件夹例如<code>/usr/local/static</code>，更符合对于不同用户的权限分离。但是注意，放在非hexo用户的目录下，需要用<code>chmod +777</code>给目录配置权限，否则git hock无法访问</p>
+<h1 id="Nginx">4. Nginx</h1><p>nginx作为一个完成度非常高的负载均衡框架，和很多成熟的开源框架一样，大多数功能都可以通过修改配置文件来完成，使用者只需要简单修改一下nginx配置文件，便可以非常轻松的实现比如反向代理，负载均衡这些常用的功能。这里我们仅仅用到最简单的功能，但还是介绍一下比较好</p>
+<h2 id="Nginx基本操作">4.1. Nginx基本操作</h2><p>启动nginx：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">##使用systemctl</span><br><span class="line">systemctl start nginx.service</span><br><span class="line">#使用service</span><br><span class="line">service nginx start</span><br><span class="line">#或，简单粗暴的直接调用</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure>
+<p>停止nginx:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">##使用systemctl</span><br><span class="line">systemctl stop nginx.service</span><br><span class="line">#使用service</span><br><span class="line">service nginx stop</span><br><span class="line">#直接强行结束</span><br><span class="line">nginx -s stop</span><br><span class="line">##Nginx在退出前完成已经接受的连接请求。</span><br><span class="line">nginx -s quit</span><br></pre></td></tr></table></figure>
+<p>重启nginx：<br>当我们修改了nginx的某些配置，为了使配置生效，我们往往需要重启nginx，同样的，linux下依然有两种方式来重启我们的nginx服务:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">##使用systemctl</span><br><span class="line">systemctl restart nginx.service</span><br><span class="line">#使用service</span><br><span class="line">service nginx restart</span><br><span class="line">#使用nginx命令重启</span><br><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+<p>其他命令：检查配置文件，同时显示配置文件目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+
+<p>要注意，如果不是在本地服务器直接调试。在服务器端的各种修改很可能因为DNS解析等各种原因不能及时更新。重新nginx之后切忌多ctrl+f5刷新几次，血的教训。</p>
+<h2 id="Nginx简单配置">4.2. Nginx简单配置</h2><p><code>/etc/nginx/nginx.conf</code>是新的默认配置文件，但server块在最新版本中不在这里，而是放到了<code>/etc/nginx/sites-available</code>中，并在<code>/etc/nginx/sites-enabled</code>中用软连接控制配置。我们这里比较简单，直接修改<code>/etc/nginx/sites-available</code>中的default文件中的server块就行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        # 默认监听80端口</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        listen       [::]:80 default_server;</span><br><span class="line">        # 修改server_name为自己之前注册好的域名，没有就不用更改</span><br><span class="line">        server_name  xxx.com;</span><br><span class="line">        # 修改网站根目录，在这里存放你的Hexo静态文件，请自行选择或创建目录</span><br><span class="line">        root         &#x2F;home&#x2F;hexo&#x2F;blog;</span><br><span class="line">        # 其他保持不变</span><br><span class="line"></span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="更新Hexo的deploy方式">5. 更新Hexo的deploy方式</h1><p>找到本地Hexo博客的站点配置文件_config.yml，找到以下内容并修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:XXXX&#x2F;XXXX.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>可以看到这里只能上传到github一种。但我们想同时传到vps和github托管，可以吗？直接这样写就行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:XXXX&#x2F;XXXX.github.io.git</span><br><span class="line">    vps: hexo@xxx.com:&#x2F;your&#x2F;file&#x2F;path</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>如果你修改了SSH端口，可以使用该方法来访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vps: ssh:&#x2F;&#x2F;hexo@xxx.com:port&#x2F;your&#x2F;file&#x2F;path</span><br></pre></td></tr></table></figure>
+
+<p>之后直接使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+<p>就能同时上传到VPS和github托管了！</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>OneEarMouse
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://codesh.xyz/2020/09/12/Hexo-VPS/" title="Hexo-VPS">http://codesh.xyz/2020/09/12/Hexo-VPS/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/02/Hexo-Sync/" rel="prev" title="hexo多终端同步配置">
+      <i class="fa fa-chevron-left"></i> hexo多终端同步配置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/16/Java-review-1/" rel="next" title="Java复健系列(1)：Java基础知识">
+      Java复健系列(1)：Java基础知识 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0SSH%E9%85%8D%E7%BD%AE"><span class="nav-text">1. 本地SSH配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VPS%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="nav-text">2. VPS服务器配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEpost-update%E9%92%A9%E5%AD%90"><span class="nav-text">3. 配置post-update钩子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx"><span class="nav-text">4. Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-text">4.1. Nginx基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE"><span class="nav-text">4.2. Nginx简单配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0Hexo%E7%9A%84deploy%E6%96%B9%E5%BC%8F"><span class="nav-text">5. 更新Hexo的deploy方式</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="OneEarMouse"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">OneEarMouse</p>
+  <div class="site-description" itemprop="description">程序员一只耳的个人编程问题记录存档，仅供参考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">OneEarMouse</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">142k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

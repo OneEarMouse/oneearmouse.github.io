@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codesh.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Java复健系列(2)：复习Java类、构造函数、访问修饰符等基本知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java复健系列(2)：Java的类与对象">
+<meta property="og:url" content="http://codesh.xyz/2020/10/18/Java-review-2/index.html">
+<meta property="og:site_name" content="OneEarMouse&#39;s Page">
+<meta property="og:description" content="Java复健系列(2)：复习Java类、构造函数、访问修饰符等基本知识">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-18T06:14:39.000Z">
+<meta property="article:modified_time" content="2023-10-07T06:39:59.501Z">
+<meta property="article:author" content="OneEarMouse">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://codesh.xyz/2020/10/18/Java-review-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java复健系列(2)：Java的类与对象 | OneEarMouse's Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">OneEarMouse's Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员一只耳</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://codesh.xyz/2020/10/18/Java-review-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="OneEarMouse">
+      <meta itemprop="description" content="程序员一只耳的个人编程问题记录存档，仅供参考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OneEarMouse's Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java复健系列(2)：Java的类与对象
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-18 14:14:39" itemprop="dateCreated datePublished" datetime="2020-10-18T14:14:39+08:00">2020-10-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-07 14:39:59" itemprop="dateModified" datetime="2023-10-07T14:39:59+08:00">2023-10-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+            <div class="post-description">Java复健系列(2)：复习Java类、构造函数、访问修饰符等基本知识</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="类的定义">1. 类的定义</h1><p>对示例的说明：</p>
+<ul>
+<li>public 是类的修饰符，表明该类是公共类，可以被其他类访问。修饰符将在下节讲解。</li>
+<li>class 是定义类的关键字。</li>
+<li>Dog 是类名称。</li>
+<li>name、age是类的成员变量，也叫属性；bark()、hungry() 是类中的函数，也叫方法。</li>
+</ul>
+<p>一个类可以包含以下类型变量：</p>
+<ul>
+<li>局部变量：在方法或者语句块中定义的变量被称为局部变量。变量声明和初始化都是在方法中，方法结束后，变量就会自动销毁。</li>
+<li>成员变量：成员变量是定义在类中、方法体之外的变量。这种变量在创建对象的时候实例化（分配内存）。成员变量可以被类中的方法和特定类的语句访问。</li>
+<li>类变量：类变量也声明在类中，方法体之外，但必须声明为static类型。static 也是修饰符的一种，将在下节讲解。</li>
+</ul>
+<h2 id="构造方法">1.1. 构造方法</h2><ul>
+<li><p>在类实例化的过程中自动执行的方法叫做构造方法，它不需要你手动调用。构造方法可以在类实例化的过程中做一些初始化的工作。</p>
+</li>
+<li><p>构造方法的名称必须与类的名称相同，并且没有返回值。</p>
+</li>
+<li><p>每个类都有构造方法。如果没有显式地为类定义构造方法，Java编译器将会为该类提供一个默认的构造方法。</p>
+</li>
+<li><p>构造方法不能被显示调用。</p>
+</li>
+<li><p>构造方法不能有返回值，因为没有变量来接收返回值。</p>
+</li>
+<li><p>构造方法前可以添加修饰符</p>
+</li>
+</ul>
+<p>特性：</p>
+<ul>
+<li>名字与类名相同。</li>
+<li>没有返回值，但不能用 void 声明构造函数。</li>
+<li>生成类的对象时自动执行，无需调用。</li>
+</ul>
+<h2 id="在-Java-中定义一个不做事且没有参数的构造方法的作用">1.2. 在 Java 中定义一个不做事且没有参数的构造方法的作用</h2><p>Java 程序在执行子类的构造方法之前，如果没有用 super()来调用父类特定的构造方法，则会调用父类中“没有参数的构造方法”。因此，如果父类中只定义了有参数的构造方法，而在子类的构造方法中又没有用 super()来调用父类中特定的构造方法，则编译时将发生错误，因为 Java 程序在父类中找不到没有参数的构造方法可供执行。解决办法是在父类里加上一个不做事且没有参数的构造方法。</p>
+<h2 id="创建对象">1.3. 创建对象</h2><p>对象是类的一个实例，创建对象的过程也叫类的实例化。对象是以类为模板来创建的。</p>
+<p>在Java中，使用new关键字来创建对象，一般有以下三个步骤：</p>
+<ul>
+<li>声明：声明一个对象，包括对象名称和对象类型。</li>
+<li>实例化：使用关键字new来创建一个对象。</li>
+<li>初始化：使用new创建对象时，会调用构造方法初始化对象。</li>
+</ul>
+<h2 id="对象实例与对象引用有何不同">1.4. 对象实例与对象引用有何不同?</h2><p>对象引用指向对象实例（对象引用存放在栈内存中）。一个对象引用可以指向 0 个或 1 个对象（一根绳子可以不系气球，也可以系一个气球）;一个对象可以有 n 个引用指向它（可以用 n 条绳子系住一个气球）。</p>
+<h2 id="成员变量与局部变量的区别有哪些？">1.5. 成员变量与局部变量的区别有哪些？</h2><ol>
+<li>从语法形式上看:成员变量是属于类的，而局部变量是在代码块或方法中定义的变量或是方法的参数；成员变量可以被 public,private,static 等修饰符所修饰，而局部变量不能被访问控制修饰符及 static 所修饰；但是，成员变量和局部变量都能被 final 所修饰。</li>
+<li>从变量在内存中的存储方式来看:如果成员变量是使用static修饰的，那么这个成员变量是属于类的，如果没有使用static修饰，这个成员变量是属于实例的。而对象存在于堆内存，局部变量则存在于栈内存。</li>
+<li>从变量在内存中的生存时间上看:成员变量是对象的一部分，它随着对象的创建而存在，而局部变量随着方法的调用而自动消失。</li>
+<li>成员变量如果没有被赋初值:则会自动以类型的默认值而赋值（一种情况例外:被 final 修饰的成员变量也必须显式地赋值），而局部变量则不会自动赋值。</li>
+</ol>
+<h1 id="访问修饰符">2. 访问修饰符</h1><table>
+<thead>
+<tr>
+<th>修饰符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public</td>
+<td>公有，对所有类可见</td>
+</tr>
+<tr>
+<td>protected</td>
+<td>受保护的，对同一包内类和所有子类可见</td>
+</tr>
+<tr>
+<td>private</td>
+<td>私有的，同一类内可见</td>
+</tr>
+<tr>
+<td>默认</td>
+<td>同一包内可见，默认无修饰符</td>
+</tr>
+</tbody></table>
+<p>protected and private 不能修饰类和接口</p>
+<h2 id="public">2.1. public</h2><p>由于类的继承性，类所有的public方法和变量都能被其子类继承。</p>
+<h2 id="protected">2.2. protected</h2><p>基类的 protected 成员是包内可见的，并且对子类可见；<br>若子类与基类不在同一包中，那么在子类中，子类实例可以访问其从基类继承而来的protected方法，而不能访问基类实例的protected方法。</p>
+<h2 id="private">2.3. private</h2><p>private变量通过get&#x2F;set函数访问</p>
+<h2 id="默认的：不使用任何关键字">2.4. 默认的：不使用任何关键字</h2><p>不使用任何修饰符声明的属性和方法，对同一个包内的类是可见的。接口里的变量都隐式声明为public static final，而接口里的方法默认情况下访问权限为public。</p>
+<h2 id="关键字的继承">2.5. 关键字的继承</h2><ul>
+<li>父类中声明为public的方法在子类中也必须为public。</li>
+<li>父类中声明为protected的方法在子类中要么声明为protected，要么声明为public。不能声明为private。</li>
+<li>父类中默认修饰符声明的方法，能够在子类中声明为private。</li>
+<li>父类中声明为private的方法，不能够被继承。</li>
+</ul>
+<h1 id="作用域">3. 作用域</h1><ul>
+<li>类级变量：又称全局级变量或静态变量，需要使用static关键字修饰，你可以与 C&#x2F;C++ 中的 static 变量对比学习。类级变量在类定义后就已经存在，占用内存空间，可以通过类名来访问，不需要实例化。</li>
+<li>对象实例级变量：就是成员变量，实例化后才会分配内存空间，才能访问。</li>
+<li>方法级变量：就是在方法内部定义的变量，就是局部变量。</li>
+<li>块级变量：就是定义在一个块内部的变量，变量的生存周期就是这个块，出了这个块就消失了，比如 if、for 语句的块。块是指由大括号包围的代码，例如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">int age &#x3D; 3;</span><br><span class="line">    String name &#x3D; &quot;www.yq1012.com&quot;;</span><br><span class="line">    &#x2F;&#x2F; 正确，在块内部可以访问 age 和 name 变量</span><br><span class="line">    System.out.println( name + &quot;已经&quot; + age + &quot;岁了&quot;);</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; 错误，在块外部无法访问 age 和 name 变量</span><br><span class="line">System.out.println( name + &quot;已经&quot; + age + &quot;岁了&quot;);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>说明</p>
+<ul>
+<li>方法内部除了能访问方法级的变量，还可以访问类级和实例级的变量。</li>
+<li>块内部能够访问类级、实例级变量，如果块被包含在方法内部，它还可以访问方法级的变量。</li>
+<li>方法级和块级的变量必须被显示地初始化，否则不能访问。</li>
+</ul>
+<h2 id="This">3.1. This</h2><p>this 关键字用来表示当前对象本身，或当前类的一个实例，通过 this 可以调用本对象的所有方法和属性。this 只有在类实例化后才有意义。</p>
+<h3 id="使用this区分同名变量">3.1.1. 使用this区分同名变量</h3><p>成员变量与方法内部的变量重名时，希望在方法内部调用成员变量，这时候只能使用this。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Demo &#123;</span><br><span class="line">	public String name;</span><br><span class="line">    public int age;</span><br><span class="line">    &#x2F;&#x2F;构造方法</span><br><span class="line">    public Demo()&#123;</span><br><span class="line">        this(&quot;程序员&quot;, 3);</span><br><span class="line">    &#125;</span><br><span class="line">    public Demo(String name, int age)&#123;</span><br><span class="line">        this.name &#x3D; name;</span><br><span class="line">        this.age &#x3D; age;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="作为方法名来初始化对象">3.1.2. 作为方法名来初始化对象</h3><ul>
+<li>在构造方法中调用另一个构造方法，调用动作必须置于最起始的位置。</li>
+<li>不能在构造方法以外的任何方法内调用构造方法。</li>
+<li>在一个构造方法内只能调用一个构造方法。</li>
+</ul>
+<h3 id="作为参数传递">3.1.3. 作为参数传递</h3><p>需要在某些完全分离的类中调用一个方法，并将当前对象的一个引用作为参数传递时。</p>
+<h2 id="成员变量与局部变量的区别有哪些？-1">3.2. 成员变量与局部变量的区别有哪些？</h2><ol>
+<li>从语法形式上看:成员变量是属于类的，而局部变量是在代码块或方法中定义的变量或是方法的参数；成员变量可以被 public,private,static 等修饰符所修饰，而局部变量不能被访问控制修饰符及 static 所修饰；但是，成员变量和局部变量都能被 final 所修饰。</li>
+<li>从变量在内存中的存储方式来看:如果成员变量是使用static修饰的，那么这个成员变量是属于类的，如果没有使用static修饰，这个成员变量是属于实例的。而对象存在于堆内存，局部变量则存在于栈内存。</li>
+<li>从变量在内存中的生存时间上看:成员变量是对象的一部分，它随着对象的创建而存在，而局部变量随着方法的调用而自动消失。</li>
+<li>成员变量如果没有被赋初值:则会自动以类型的默认值而赋值（一种情况例外:被 final 修饰的成员变量也必须显式地赋值），</li>
+</ol>
+<h1 id="方法重载">4. 方法重载</h1><p>在Java中，同一个类中的多个方法可以有相同的名字，只要它们的参数列表不同就可以，这被称为方法重载(method overloading)。参数列表又叫参数签名，包括参数的类型、参数的个数和参数的顺序，只要有一个不同就叫做参数列表不同。</p>
+<p>重载是面向对象的一个基本特性。方法名称相同时，编译器会根据调用方法的参数个数、参数类型等去逐个匹配，以选择对应的方法，如果匹配失败，则编译器报错，这叫做重载分辨。</p>
+<ul>
+<li>参数列表不同包括：个数不同、类型不同和顺序不同。</li>
+<li>仅仅参数变量名称不同是不可以的。</li>
+<li>跟成员方法一样，构造方法也可以重载。</li>
+<li>声明为final的方法不能被重载。</li>
+<li>声明为static的方法不能被重载，但是能够被再次声明。</li>
+</ul>
+<h1 id="类创建时的基本运行顺序">5. 类创建时的基本运行顺序</h1><ul>
+<li>main</li>
+<li>class init</li>
+<li>class 构造函数</li>
+<li>new 完成，继续main</li>
+<li>执行完毕</li>
+</ul>
+<h1 id="声明规则">6. 声明规则</h1><ul>
+<li>一个源文件中只能有一个public类。</li>
+<li>一个源文件可以有多个非public类。</li>
+<li>源文件的名称应该和public类的类名保持一致。例如：源文件中public类的类名是Employee，那么源文件应该命名为Employee.java。</li>
+<li>如果一个类定义在某个包中，那么package语句应该在源文件的首行。</li>
+<li>如果源文件包含import语句，那么应该放在package语句和类定义之间。如果没有package语句，那么import语句应该在源文件中最前面。</li>
+<li>import语句和package语句对源文件中定义的所有类都有效。在同一源文件中，不能给不同的类不同的包声明。</li>
+<li>类有若干种访问级别，并且类也分不同的类型：抽象类和final类等。这些将在后续章节介绍。</li>
+<li>除了上面提到的几种类型，Java还有一些特殊的类，如内部类、匿名类。</li>
+</ul>
+<h1 id="其他">7. 其他</h1><h2 id="StringBuilder与StringBuffer">7.1. StringBuilder与StringBuffer</h2><p>简单的来说：String 类中使用 final 关键字修饰字符数组来保存字符串，private final char value[]，所以 String 对象是不可变的。在 Java 9 之后，String 类的实现改用 byte 数组存储字符串 private final byte[] value;</p>
+<p>而 StringBuilder 与 StringBuffer 都继承自 AbstractStringBuilder 类，在 AbstractStringBuilder 中也是使用字符数组保存字符串char[]value 但是没有用 final 关键字修饰，所以这两种对象都是可变的。</p>
+<p>线程安全性：String 中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder 是 StringBuilder 与 StringBuffer 的公共父类，定义了一些字符串的基本操作，如 expandCapacity、append、insert、indexOf 等公共方法。StringBuffer 对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。StringBuilder 并没有对方法进行加同步锁，所以是非线程安全的。</p>
+<p>性能：每次对 String 类型进行改变的时候，都会生成一个新的 String 对象，然后将指针指向新的 String 对象。StringBuffer 每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用 StringBuilder 相比使用 StringBuffer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险。</p>
+<ol>
+<li>操作少量的数据: 适用 String</li>
+<li>单线程操作字符串缓冲区下操作大量数据: 适用 StringBuilder</li>
+<li>多线程操作字符串缓冲区下操作大量数据: 适用 StringBuffer</li>
+</ol>
+<h2 id="Object类">7.2. Object类</h2><p>Object 类是一个特殊的类，是所有类的父类。它主要提供了以下 11 个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public final native Class&lt;?&gt; getClass()&#x2F;&#x2F;native方法，用于返回当前运行时对象的Class对象，使用了final关键字修饰，故不允许子类重写。</span><br><span class="line"></span><br><span class="line">public native int hashCode() &#x2F;&#x2F;native方法，用于返回对象的哈希码，主要使用在哈希表中，比如JDK中的HashMap。</span><br><span class="line">public boolean equals(Object obj)&#x2F;&#x2F;用于比较2个对象的内存地址是否相等，String类对该方法进行了重写用户比较字符串的值是否相等。</span><br><span class="line"></span><br><span class="line">protected native Object clone() throws CloneNotSupportedException&#x2F;&#x2F;naitive方法，用于创建并返回当前对象的一份拷贝。一般情况下，对于任何对象 x，表达式 x.clone() !&#x3D; x 为true，x.clone().getClass() &#x3D;&#x3D; x.getClass() 为true。Object本身没有实现Cloneable接口，所以不重写clone方法并且进行调用的话会发生CloneNotSupportedException异常。</span><br><span class="line"></span><br><span class="line">public String toString()&#x2F;&#x2F;返回类的名字@实例的哈希码的16进制的字符串。建议Object所有的子类都重写这个方法。</span><br><span class="line"></span><br><span class="line">public final native void notify()&#x2F;&#x2F;native方法，并且不能重写。唤醒一个在此对象监视器上等待的线程(监视器相当于就是锁的概念)。如果有多个线程在等待只会任意唤醒一个。</span><br><span class="line"></span><br><span class="line">public final native void notifyAll()&#x2F;&#x2F;native方法，并且不能重写。跟notify一样，唯一的区别就是会唤醒在此对象监视器上等待的所有线程，而不是一个线程。</span><br><span class="line"></span><br><span class="line">public final native void wait(long timeout) throws InterruptedException&#x2F;&#x2F;native方法，并且不能重写。暂停线程的执行。注意：sleep方法没有释放锁，而wait方法释放了锁 。timeout是等待时间。</span><br><span class="line"></span><br><span class="line">public final void wait(long timeout, int nanos) throws InterruptedException&#x2F;&#x2F;多了nanos参数，这个参数表示额外时间（以毫微秒为单位，范围是 0-999999）。 所以超时的时间还需要加上nanos毫秒。</span><br><span class="line"></span><br><span class="line">public final void wait() throws InterruptedException&#x2F;&#x2F;跟之前的2个wait方法一样，只不过该方法一直等待，没有超时时间这个概念</span><br><span class="line"></span><br><span class="line">protected void finalize() throws Throwable &#123; &#125;&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h2 id="BigDecimal">7.3. BigDecimal</h2><h3 id="BigDecimal-的用处">7.3.1. BigDecimal 的用处</h3><p>《阿里巴巴Java开发手册》中提到：<strong>浮点数之间的等值判断，基本数据类型不能用&#x3D;&#x3D;来比较，包装数据类型不能用 equals 来判断。</strong> 具体原理和浮点数的编码方式有关，这里就不多提了，我们下面直接上实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> a = <span class="number">1.0f</span> - <span class="number">0.9f</span>;</span><br><span class="line"><span class="keyword">float</span> b = <span class="number">0.9f</span> - <span class="number">0.8f</span>;</span><br><span class="line">System.out.println(a);<span class="comment">// 0.100000024</span></span><br><span class="line">System.out.println(b);<span class="comment">// 0.099999964</span></span><br><span class="line">System.out.println(a == b);<span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>具有基本数学知识的我们很清楚的知道输出并不是我们想要的结果（<strong>精度丢失</strong>），我们如何解决这个问题呢？一种很常用的方法是：<strong>使用使用 BigDecimal 来定义浮点数的值，再进行浮点数的运算操作。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BigDecimal a = <span class="keyword">new</span> BigDecimal(<span class="string">&quot;1.0&quot;</span>);</span><br><span class="line">BigDecimal b = <span class="keyword">new</span> BigDecimal(<span class="string">&quot;0.9&quot;</span>);</span><br><span class="line">BigDecimal c = <span class="keyword">new</span> BigDecimal(<span class="string">&quot;0.8&quot;</span>);</span><br><span class="line"></span><br><span class="line">BigDecimal x = a.subtract(b); </span><br><span class="line">BigDecimal y = b.subtract(c); </span><br><span class="line"></span><br><span class="line">System.out.println(x); <span class="comment">/* 0.1 */</span></span><br><span class="line">System.out.println(y); <span class="comment">/* 0.1 */</span></span><br><span class="line">System.out.println(Objects.equals(x, y)); <span class="comment">/* true */</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="BigDecimal-的大小比较">7.3.2. BigDecimal 的大小比较</h3><p><code>a.compareTo(b)</code> : 返回 -1 表示 <code>a</code> 小于 <code>b</code>，0 表示 <code>a</code> 等于 <code>b</code> ， 1表示 <code>a</code> 大于 <code>b</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BigDecimal a = <span class="keyword">new</span> BigDecimal(<span class="string">&quot;1.0&quot;</span>);</span><br><span class="line">BigDecimal b = <span class="keyword">new</span> BigDecimal(<span class="string">&quot;0.9&quot;</span>);</span><br><span class="line">System.out.println(a.compareTo(b));<span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<h3 id="BigDecimal-保留几位小数">7.3.3. BigDecimal 保留几位小数</h3><p>通过 <code>setScale</code>方法设置保留几位小数以及保留规则。保留规则有挺多种，不需要记，IDEA会提示。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BigDecimal m = <span class="keyword">new</span> BigDecimal(<span class="string">&quot;1.255433&quot;</span>);</span><br><span class="line">BigDecimal n = m.setScale(<span class="number">3</span>,BigDecimal.ROUND_HALF_DOWN);</span><br><span class="line">System.out.println(n);<span class="comment">// 1.255</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="BigDecimal-的使用注意事项">7.3.4. BigDecimal 的使用注意事项</h3><p>注意：我们在使用BigDecimal时，为了防止精度丢失，推荐使用它的 <strong>BigDecimal(String)</strong> 构造方法来创建对象。</p>
+<h3 id="总结">7.3.5. 总结</h3><p>BigDecimal 主要用来操作（大）浮点数，BigInteger 主要用来操作大整数（超过 long 类型）。</p>
+<p>BigDecimal 的实现利用到了 BigInteger, 所不同的是 BigDecimal 加入了小数位的概念</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>OneEarMouse
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://codesh.xyz/2020/10/18/Java-review-2/" title="Java复健系列(2)：Java的类与对象">http://codesh.xyz/2020/10/18/Java-review-2/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/16/Java-review-1/" rel="prev" title="Java复健系列(1)：Java基础知识">
+      <i class="fa fa-chevron-left"></i> Java复健系列(1)：Java基础知识
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/18/Java-review-3/" rel="next" title="Java复健系列(3)：Java的面向对象">
+      Java复健系列(3)：Java的面向对象 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">1. 类的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-text">1.1. 构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8-Java-%E4%B8%AD%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%81%9A%E4%BA%8B%E4%B8%94%E6%B2%A1%E6%9C%89%E5%8F%82%E6%95%B0%E7%9A%84%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-text">1.2. 在 Java 中定义一个不做事且没有参数的构造方法的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-text">1.3. 创建对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B%E4%B8%8E%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C"><span class="nav-text">1.4. 对象实例与对象引用有何不同?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-text">1.5. 成员变量与局部变量的区别有哪些？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="nav-text">2. 访问修饰符</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#public"><span class="nav-text">2.1. public</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#protected"><span class="nav-text">2.2. protected</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private"><span class="nav-text">2.3. private</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E7%9A%84%EF%BC%9A%E4%B8%8D%E4%BD%BF%E7%94%A8%E4%BB%BB%E4%BD%95%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">2.4. 默认的：不使用任何关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E7%BB%A7%E6%89%BF"><span class="nav-text">2.5. 关键字的继承</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="nav-text">3. 作用域</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#This"><span class="nav-text">3.1. This</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8this%E5%8C%BA%E5%88%86%E5%90%8C%E5%90%8D%E5%8F%98%E9%87%8F"><span class="nav-text">3.1.1. 使用this区分同名变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA%E6%96%B9%E6%B3%95%E5%90%8D%E6%9D%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AF%B9%E8%B1%A1"><span class="nav-text">3.1.2. 作为方法名来初始化对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-text">3.1.3. 作为参数传递</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%9A%84%E5%8C%BA%E5%88%AB%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F-1"><span class="nav-text">3.2. 成员变量与局部变量的区别有哪些？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD"><span class="nav-text">4. 方法重载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E5%88%9B%E5%BB%BA%E6%97%B6%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%BF%90%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-text">5. 类创建时的基本运行顺序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E8%A7%84%E5%88%99"><span class="nav-text">6. 声明规则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-text">7. 其他</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#StringBuilder%E4%B8%8EStringBuffer"><span class="nav-text">7.1. StringBuilder与StringBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object%E7%B1%BB"><span class="nav-text">7.2. Object类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BigDecimal"><span class="nav-text">7.3. BigDecimal</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal-%E7%9A%84%E7%94%A8%E5%A4%84"><span class="nav-text">7.3.1. BigDecimal 的用处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal-%E7%9A%84%E5%A4%A7%E5%B0%8F%E6%AF%94%E8%BE%83"><span class="nav-text">7.3.2. BigDecimal 的大小比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal-%E4%BF%9D%E7%95%99%E5%87%A0%E4%BD%8D%E5%B0%8F%E6%95%B0"><span class="nav-text">7.3.3. BigDecimal 保留几位小数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-text">7.3.4. BigDecimal 的使用注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">7.3.5. 总结</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="OneEarMouse"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">OneEarMouse</p>
+  <div class="site-description" itemprop="description">程序员一只耳的个人编程问题记录存档，仅供参考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">OneEarMouse</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">142k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codesh.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="简单介绍Java中Runnable与Callable的区别，以及Java与Spring中的线程池简单使用方法。最后介绍了Spring中线程池的调用机制以及@Async的使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java与Spring中的线程池">
+<meta property="og:url" content="http://codesh.xyz/2022/01/30/Java-spring-thread-pool/index.html">
+<meta property="og:site_name" content="OneEarMouse&#39;s Page">
+<meta property="og:description" content="简单介绍Java中Runnable与Callable的区别，以及Java与Spring中的线程池简单使用方法。最后介绍了Spring中线程池的调用机制以及@Async的使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-30T03:11:24.000Z">
+<meta property="article:modified_time" content="2023-10-07T06:39:59.505Z">
+<meta property="article:author" content="OneEarMouse">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://codesh.xyz/2022/01/30/Java-spring-thread-pool/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java与Spring中的线程池 | OneEarMouse's Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">OneEarMouse's Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员一只耳</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://codesh.xyz/2022/01/30/Java-spring-thread-pool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="OneEarMouse">
+      <meta itemprop="description" content="程序员一只耳的个人编程问题记录存档，仅供参考">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OneEarMouse's Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java与Spring中的线程池
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-30 11:11:24" itemprop="dateCreated datePublished" datetime="2022-01-30T11:11:24+08:00">2022-01-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-07 14:39:59" itemprop="dateModified" datetime="2023-10-07T14:39:59+08:00">2023-10-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>12 分钟</span>
+            </span>
+            <div class="post-description">简单介绍Java中Runnable与Callable的区别，以及Java与Spring中的线程池简单使用方法。最后介绍了Spring中线程池的调用机制以及@Async的使用</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Runnable-与-Callable">1. Runnable 与 Callable</h1><h2 id="Runable">1.1. Runable</h2><p>Thread接受Runnable类型，并且允许接受Runnable构造线程。线程启动后会自动调用Runnable中的run方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> MyRunnable());</span><br><span class="line">        t.start(); <span class="comment">// 启动新线程</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;start new thread!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>问题：Runnable接口的run方法只能执行，没有返回值。如果任务需要读取多线程任务的返回值，则非常不方便</p>
+<h2 id="Callable">1.2. Callable</h2><p>定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;SomeThing&quot;</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Callable接口是一个泛型接口，可以返回指定类型的结果。但如何接受指定类型的结果？</p>
+<p>ExecutorService.submit()方法，可以看到，它返回了一个Future类型，一个Future类型的实例代表一个未来能获取结果的对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executor = Executors.newFixedThreadPool(<span class="number">3</span>); </span><br><span class="line"><span class="comment">// 定义任务:</span></span><br><span class="line">Callable&lt;String&gt; task = <span class="keyword">new</span> Task();</span><br><span class="line"><span class="comment">// 提交任务并获得Future:</span></span><br><span class="line">Future&lt;String&gt; future = executor.submit(task);</span><br><span class="line"><span class="comment">// 等待线程执行完毕（非必须）</span></span><br><span class="line">Thread.sleep(<span class="number">1000</span>)</span><br><span class="line"><span class="comment">// 从Future获取异步执行返回的结果:</span></span><br><span class="line">String result = future.get(); <span class="comment">// 可能阻塞</span></span><br></pre></td></tr></table></figure>
+
+<p>当我们在线程池中提交Callable任务后，会得到一个<code>Future&lt;T&gt;</code>对象。之后，在主线程等待子线程执行完毕，然后再通过<code>Future.get()</code>获取子线程的输出结果。</p>
+<h2 id="Future使用方法">1.3. Future使用方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//阻塞等待，获取结果</span></span><br><span class="line">Future.get();</span><br><span class="line"><span class="comment">//阻塞等待，获取结果。并设置了超时时间</span></span><br><span class="line"><span class="comment">//如果超时依然未获取，则抛出TimeoutException</span></span><br><span class="line">Future.get(<span class="keyword">long</span> timeout, TimeUnit unit);</span><br><span class="line"><span class="comment">//取消当前Future对应的线程执行的任务</span></span><br><span class="line">Future.cancel(<span class="keyword">boolean</span> mayInterruptIfRunning);</span><br><span class="line"><span class="comment">//判断Future对应的线程执行的任务是否完成（注：cancel也算入完成）</span></span><br><span class="line">Future.isDone();</span><br><span class="line"><span class="comment">//判断Future对应的线程执行的任务是否在完成前被取消</span></span><br><span class="line">Future.isCalcelled();</span><br></pre></td></tr></table></figure>
+
+<h1 id="线程池">2. 线程池</h1><p>我们通常将Future与线程池结合使用。将task提交到线程池中，再等待线程执行完毕后，获取Future的结果。这里不详细介绍java的线程池，直接介绍Spring中的线程池</p>
+<h2 id="java中的ThreadPoolExecutor">2.1. java中的ThreadPoolExecutor</h2><p>构造方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, defaultHandler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, RejectedExecutionHandler handler)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)</span></span></span><br><span class="line"><span class="function">  </span></span><br></pre></td></tr></table></figure>
+<p>java中的ThreadPoolExecutor，可用的参数有：</p>
+<ul>
+<li>corePoolSize: 核心线程数量。决定了添加的任务是开辟新的线程去执行，还是放到workQueue任务队列中去；</li>
+<li>maximumPoolSize：最大线程数量。决定线程池最大线程数量</li>
+<li>keepAliveTime：当线程池中空闲线程数量超过corePoolSize时，多余的线程会在多长时间内被销毁；</li>
+<li>unit：keepAliveTime的时间单位</li>
+<li>workQueue：任务队列。被添加到线程池中，但仍在等待执行的任务</li>
+<li>threadFactory：线程工程，用于线程创建</li>
+<li>rejectedExecutionHandler：任务数量过多时，拒绝任务的策略</li>
+</ul>
+<h3 id="队列">2.1.1. 队列</h3><p>通过workQueue中传入队列的不同，ThreadPoolExecutor可以有不同的工作模式</p>
+<p>队列可以分为：</p>
+<ul>
+<li>直接提交队列SynchronousQueue：提交的任务不会被保存，总是会马上提交执行，超过maxPoolSize上限则直接拒绝。</li>
+<li>有界任务队列ArrayBlockingQueue：超过poolCoreSize的任务会被储存在队列中等待执行。超过队列上线后超过maxPoolSize则拒绝</li>
+<li>无界任务队列LinkedBlockingQueue：超过poolCoreSize的任务会被储存在队列中等待执行。队列无上线（任务永远会被暂存在队列中）</li>
+<li>优先任务队列PriorityBlockingQueue：放入队列中的任务按照优先级重排序（相当于特殊的无界队列）</li>
+</ul>
+<h3 id="拒绝策略">2.1.2. 拒绝策略</h3><p>ThreadPoolExecutor自带的拒绝策略如下：</p>
+<ol>
+<li>AbortPolicy策略：该策略会直接抛出异常，阻止系统正常工作；</li>
+<li>CallerRunsPolicy策略：如果线程池的线程数量达到上限，该策略会把任务队列中的任务放在调用者线程当中运行；</li>
+<li>DiscardOledestPolicy策略：该策略会丢弃任务队列中最老的一个任务，也就是当前任务队列中最先被添加进去的，马上要被执行的那个任务，并尝试再次提交；</li>
+<li>DiscardPolicy策略：该策略会默默丢弃超过上限的任务，不予任何处理。当然使用此策略，业务场景中需允许任务的丢失；</li>
+</ol>
+<h2 id="spring自带线程池ThreadPoolTaskExecutor">2.2. spring自带线程池ThreadPoolTaskExecutor</h2><p>Spring异步线程池的接口类是TaskExecutor，本质其本质是对java.util.concurrent.ThreadPoolExecutor的包装。</p>
+<p>配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Executor <span class="title">taskExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ThreadPoolTaskExecutor executor = <span class="keyword">new</span> ThreadPoolTaskExecutor();</span><br><span class="line">        <span class="comment">//最大线程数</span></span><br><span class="line">        executor.setMaxPoolSize(maxPoolSize);</span><br><span class="line">        <span class="comment">//核心线程数</span></span><br><span class="line">        executor.setCorePoolSize(corePoolSize);</span><br><span class="line">        <span class="comment">//任务队列的大小</span></span><br><span class="line">        executor.setQueueCapacity(queueCapacity);</span><br><span class="line">        <span class="comment">//线程前缀名</span></span><br><span class="line">        executor.setThreadNamePrefix(namePrefix);</span><br><span class="line">        <span class="comment">//线程存活时间</span></span><br><span class="line">        executor.setKeepAliveSeconds(keepAliveSeconds);</span><br><span class="line">        <span class="comment">//拒绝策略</span></span><br><span class="line">        executor.setRejectedExecutionHandler(<span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy());</span><br><span class="line">        <span class="comment">//线程初始化</span></span><br><span class="line">        executor.initialize();</span><br><span class="line">        <span class="keyword">return</span> executor;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，其使用方法与java自带的ThreadPoolExecutor非常类似。但用户不再需要通过管理复杂的队列来管理线程池的调度方式。</p>
+<h2 id="线程调度策略">2.3. 线程调度策略</h2><p>spring自带线程池ThreadPoolTaskExecutor的调度策略综合了java中的ThreadPoolExecutor使用不同队列时的不同调度方式。通过改变<code>corePoolSize</code>、<code>maxPoolSize</code>、<code>queueCapacity</code>即可改变调度方式。我们来重新理解一下几个改变</p>
+<ol>
+<li>corePoolSize<br>线程池的基本大小，即在没有任务需要执行的时候线程池的大小，并且只有在工作队列满了的情况下才会创建超出这个数量的线程。</li>
+<li>maximumPoolSize<br>线程池中允许的最大线程数</li>
+<li>poolSize:<br>线程池中当前线程的数量</li>
+<li>queueCapacity<br>等待队列大小</li>
+</ol>
+<p>查看源码（基于jdk8）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (command == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Proceed in 3 steps:</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * 1. If fewer than corePoolSize threads are running, try to</span></span><br><span class="line"><span class="comment">         * start a new thread with the given command as its first</span></span><br><span class="line"><span class="comment">         * task.  The call to addWorker atomically checks runState and</span></span><br><span class="line"><span class="comment">         * workerCount, and so prevents false alarms that would add</span></span><br><span class="line"><span class="comment">         * threads when it shouldn&#x27;t, by returning false.</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * 2. If a task can be successfully queued, then we still need</span></span><br><span class="line"><span class="comment">         * to double-check whether we should have added a thread</span></span><br><span class="line"><span class="comment">         * (because existing ones died since last checking) or that</span></span><br><span class="line"><span class="comment">         * the pool shut down since entry into this method. So we</span></span><br><span class="line"><span class="comment">         * recheck state and if necessary roll back the enqueuing if</span></span><br><span class="line"><span class="comment">         * stopped, or start a new thread if there are none.</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * 3. If we cannot queue task, then we try to add a new</span></span><br><span class="line"><span class="comment">         * thread.  If it fails, we know we are shut down or saturated</span></span><br><span class="line"><span class="comment">         * and so reject the task.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">int</span> c = ctl.get();</span><br><span class="line">        <span class="keyword">if</span> (workerCountOf(c) &lt; corePoolSize) &#123;</span><br><span class="line">            <span class="keyword">if</span> (addWorker(command, <span class="keyword">true</span>))</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            c = ctl.get();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isRunning(c) &amp;&amp; workQueue.offer(command)) &#123;</span><br><span class="line">            <span class="keyword">int</span> recheck = ctl.get();</span><br><span class="line">            <span class="keyword">if</span> (! isRunning(recheck) &amp;&amp; remove(command))</span><br><span class="line">                reject(command);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (workerCountOf(recheck) == <span class="number">0</span>)</span><br><span class="line">                addWorker(<span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (!addWorker(command, <span class="keyword">false</span>))</span><br><span class="line">            reject(command);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>很明显，处理流程为：</p>
+<ol>
+<li>如果当前线程数量没有达到核心线程数量<code>poolSize&lt;corePoolSize</code>，无论是否有空闲线程，都新增一个线程处理提交新的任务</li>
+<li>如当前线程数量大于核心线程数量<code>poolSize&gt;=corePoolSize</code>，并且任务队列未满，则将任务加入队列中等待</li>
+<li>如果当前线程数量对等于核心线程数量<code>poolSize&gt;=corePoolSize</code>，并且任务队列满时，<br>3.1. 如果当前线程数量小于最大线程数量<code>poolSize&lt;maximumPoolSize</code>，那么新增线程处理任务<br>3.2. 如果当前线程数量等于最大线程数量<code>poolSize=maximumPoolSize</code>，那么执行拒绝策略拒绝任务</li>
+</ol>
+<h1 id="Spring中的-Async">3. Spring中的@Async</h1><p>注：本文源码基于spring boot 1.5.12。 高版本的Async逻辑有所不同，但使用的依然是没有上限的线程池</p>
+<h2 id="Async的使用方法">3.1. Async的使用方法</h2><p>首先在application上标注<code>@EnableAsync</code>启用async</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span></span><br><span class="line"><span class="meta">@EnableAsync</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在方法上标注<code>@Async</code>，被标注的方法即变为异步方法。在类上标注<code>@Async</code>则被标注的类中所有方法都会变为异步方法</p>
+<p>建议将异步方法的返回值设为<code>void</code>或<code>Future&lt;T&gt;</code>。否则难以获取返回值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Async</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">useAsync</span><span class="params">(Object inputObj)</span></span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Async</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Future&lt;String&gt; <span class="title">useAsync</span><span class="params">(Object inputObj)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;something&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Async</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">asyncClass</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="为什么阿里编程规范不建议使用-Async">3.2. 为什么阿里编程规范不建议使用@Async</h2><p>我们来看看Async的源码<br>@EnableAsync源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Import(AsyncConfigurationSelector.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAsync &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持用户自定义注解，扫描用户标注的@Async</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Indicate the &#x27;async&#x27; annotation type to be detected at either class</span></span><br><span class="line"><span class="comment">	 * or method level.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;By default, both Spring&#x27;s @&#123;<span class="doctag">@link</span> Async&#125; annotation and the EJB 3.1</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> <span class="doctag">@javax</span>.ejb.Asynchronous&#125; annotation will be detected.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;This attribute exists so that developers can provide their own</span></span><br><span class="line"><span class="comment">	 * custom annotation type to indicate that a method (or all methods of</span></span><br><span class="line"><span class="comment">	 * a given class) should be invoked asynchronously.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;? extends Annotation&gt; annotation() <span class="keyword">default</span> Annotation.class;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 标明是否需要创建CGLIB子代理</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Indicate whether subclass-based (CGLIB) proxies are to be created as opposed</span></span><br><span class="line"><span class="comment">	 * to standard Java interface-based proxies.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;&lt;strong&gt;Applicable only if the &#123;<span class="doctag">@link</span> #mode&#125; is set to &#123;<span class="doctag">@link</span> AdviceMode#PROXY&#125;&lt;/strong&gt;.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The default is &#123;<span class="doctag">@code</span> false&#125;.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;Note that setting this attribute to &#123;<span class="doctag">@code</span> true&#125; will affect &lt;em&gt;all&lt;/em&gt;</span></span><br><span class="line"><span class="comment">	 * Spring-managed beans requiring proxying, not just those marked with &#123;<span class="doctag">@code</span> <span class="doctag">@Async</span>&#125;.</span></span><br><span class="line"><span class="comment">	 * For example, other beans marked with Spring&#x27;s &#123;<span class="doctag">@code</span> <span class="doctag">@Transactional</span>&#125; annotation</span></span><br><span class="line"><span class="comment">	 * will be upgraded to subclass proxying at the same time. This approach has no</span></span><br><span class="line"><span class="comment">	 * negative impact in practice unless one is explicitly expecting one type of proxy</span></span><br><span class="line"><span class="comment">	 * vs. another &amp;mdash; for example, in tests.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">proxyTargetClass</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 标明异步通知将会如何实现，默认PROXY</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Indicate how async advice should be applied.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;&lt;b&gt;The default is &#123;<span class="doctag">@link</span> AdviceMode#PROXY&#125;.&lt;/b&gt;</span></span><br><span class="line"><span class="comment">	 * Please note that proxy mode allows for interception of calls through the proxy</span></span><br><span class="line"><span class="comment">	 * only. Local calls within the same class cannot get intercepted that way; an</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> Async&#125; annotation on such a method within a local call will be ignored</span></span><br><span class="line"><span class="comment">	 * since Spring&#x27;s interceptor does not even kick in for such a runtime scenario.</span></span><br><span class="line"><span class="comment">	 * For a more advanced mode of interception, consider switching this to</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> AdviceMode#ASPECTJ&#125;.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function">AdviceMode <span class="title">mode</span><span class="params">()</span> <span class="keyword">default</span> AdviceMode.PROXY</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 标明标明异步注解bean处理器应该遵循的执行顺序，默认最低的优先级</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Indicate the order in which the &#123;<span class="doctag">@link</span> AsyncAnnotationBeanPostProcessor&#125;</span></span><br><span class="line"><span class="comment">	 * should be applied.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The default is &#123;<span class="doctag">@link</span> Ordered#LOWEST_PRECEDENCE&#125; in order to run</span></span><br><span class="line"><span class="comment">	 * after all other post-processors, so that it can add an advisor to</span></span><br><span class="line"><span class="comment">	 * existing proxies rather than double-proxy.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">order</span><span class="params">()</span> <span class="keyword">default</span> Ordered.LOWEST_PRECEDENCE</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>好，看到了<code>@Import(AsyncConfigurationSelector.class)</code>，来看看</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncConfigurationSelector</span> <span class="keyword">extends</span> <span class="title">AdviceModeImportSelector</span>&lt;<span class="title">EnableAsync</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ASYNC_EXECUTION_ASPECT_CONFIGURATION_CLASS_NAME =</span><br><span class="line">			<span class="string">&quot;org.springframework.scheduling.aspectj.AspectJAsyncConfiguration&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 决定选择哪个ProxyAsyncConfiguration</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String[] selectImports(AdviceMode adviceMode) &#123;</span><br><span class="line">		<span class="keyword">switch</span> (adviceMode) &#123;</span><br><span class="line">			<span class="keyword">case</span> PROXY:</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> String[] &#123; ProxyAsyncConfiguration.class.getName() &#125;;</span><br><span class="line">			<span class="keyword">case</span> ASPECTJ:</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> String[] &#123; ASYNC_EXECUTION_ASPECT_CONFIGURATION_CLASS_NAME &#125;;</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>ProxyAsyncConfiguration.class</code>继承于<code>AbstractAsyncConfiguration</code>，再看</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractAsyncConfiguration</span> <span class="keyword">implements</span> <span class="title">ImportAware</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> AnnotationAttributes enableAsync;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> Executor executor;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> AsyncUncaughtExceptionHandler exceptionHandler;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 找到所有AsyncConfiguer并使用其配置</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Collect any &#123;<span class="doctag">@link</span> AsyncConfigurer&#125; beans through autowiring.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Autowired(required = false)</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setConfigurers</span><span class="params">(Collection&lt;AsyncConfigurer&gt; configurers)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (CollectionUtils.isEmpty(configurers)) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (configurers.size() &gt; <span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">&quot;Only one AsyncConfigurer may exist&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		AsyncConfigurer configurer = configurers.iterator().next();</span><br><span class="line">		<span class="keyword">this</span>.executor = configurer.getAsyncExecutor();</span><br><span class="line">		<span class="keyword">this</span>.exceptionHandler = configurer.getAsyncUncaughtExceptionHandler();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那么如果没有实现AsyncConfigurer，程序默认会创建什么？带着这个疑问，我们找到了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnProperty(value = &quot;spring.sleuth.async.enabled&quot;, matchIfMissing = true)</span></span><br><span class="line"><span class="meta">@ConditionalOnBean(Tracer.class)</span></span><br><span class="line"><span class="meta">@AutoConfigureAfter(AsyncCustomAutoConfiguration.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncDefaultAutoConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Autowired</span> <span class="keyword">private</span> BeanFactory beanFactory;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果找不到AsyncConfigurer的bean就执行</span></span><br><span class="line">	<span class="meta">@Configuration</span></span><br><span class="line">	<span class="meta">@ConditionalOnMissingBean(AsyncConfigurer.class)</span></span><br><span class="line">	<span class="meta">@ConditionalOnProperty(value = &quot;spring.sleuth.async.configurer.enabled&quot;, matchIfMissing = true)</span></span><br><span class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultAsyncConfigurerSupport</span> <span class="keyword">extends</span> <span class="title">AsyncConfigurerSupport</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Autowired</span> <span class="keyword">private</span> BeanFactory beanFactory;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">new</span> LazyTraceExecutor(<span class="keyword">this</span>.beanFactory, <span class="keyword">new</span> SimpleAsyncTaskExecutor());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好了，我们知道了。如果我们没有自定义任何一个AsyncConfigurer，则程序会选择<code>SimpleAsyncTaskExecutor</code>作为默认的线程池。</p>
+<p>再来看看这个默认线程池</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> TaskExecutor&#125; implementation that fires up a new Thread for each task,</span></span><br><span class="line"><span class="comment"> * executing it asynchronously.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Supports limiting concurrent threads through the &quot;concurrencyLimit&quot;</span></span><br><span class="line"><span class="comment"> * bean property. By default, the number of concurrent threads is unlimited.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;&lt;b&gt;<span class="doctag">NOTE:</span> This implementation does not reuse threads!&lt;/b&gt; Consider a</span></span><br><span class="line"><span class="comment"> * thread-pooling TaskExecutor implementation instead, in particular for</span></span><br><span class="line"><span class="comment"> * executing a large number of short-lived tasks.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Juergen Hoeller</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> #setConcurrencyLimit</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> SyncTaskExecutor</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.scheduling.commonj.WorkManagerTaskExecutor</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;serial&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleAsyncTaskExecutor</span> <span class="keyword">extends</span> <span class="title">CustomizableThreadCreator</span></span></span><br><span class="line"><span class="class">		<span class="keyword">implements</span> <span class="title">AsyncListenableTaskExecutor</span>, <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 省略</span></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>好了，我们知道了这个默认线程池的特点：</p>
+<ul>
+<li>每个task都创建一个新线程</li>
+<li>如果不创建concurrencyLimit bean，则线程数量无上限</li>
+<li>SimpleAsyncTaskExecutor不会复用线程，每次都是新创建</li>
+</ul>
+<p>所以，SimpleAsyncTaskExecutor其实不是真的线程池，而是一个不断生成新线程的工具，对线程的利用管理非常低下。</p>
+<p>那么，如果我们只使用了<code>@EnableAsync</code>和<code>@Async</code>。那么spring就会给我们创建这个默认的<code>SimpleAsyncTaskExecutor</code>。每次进行线程异步调用，系统都会创建新线程执行任务并丢弃。好的，问题出现了：如果异步调用的线程数量不多，那么没有任何问题。如果异步调用的线程面临高并发的问题，那么就会出现大量的线程创建及占用，对系统造成大量负担。最终可能导致线上服务爆线程等问题</p>
+<h2 id="安全使用方法">3.3. 安全使用方法</h2><h3 id="方式一：指定线程池">3.3.1. 方式一：指定线程池</h3><p>@Async方法可以通过传入Executor的Bean名称，指定线程池。因此我们可以通过自定义线程池，配置参数，来控制@Async方法使用的线程池</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean(&quot;Executor&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ThreadPoolTaskExecutor executor = <span class="keyword">new</span> ThreadPoolTaskExecutor();</span><br><span class="line">    <span class="comment">// add thread config</span></span><br><span class="line">    executor.initialize();</span><br><span class="line">    <span class="keyword">return</span> executor;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Async(&quot;Executor&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">asyncMethod</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="方式二：实现接口AsyncConfigurer">3.3.2. 方式二：实现接口AsyncConfigurer</h3><p>这种方法相当于配置一个全局的线程池供Async使用。所有标注@Async并且没有指定线程池的方法，都会放入这个默认的Async线程池中执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">asyncConfig</span> <span class="keyword">implements</span> <span class="title">AsyncConfigurer</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> Executor <span class="title">newExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            ThreadPoolTaskExecutor executor = <span class="keyword">new</span> ThreadPoolTaskExecutor();</span><br><span class="line">            <span class="comment">// add thread config</span></span><br><span class="line">            executor.initialize();</span><br><span class="line">            <span class="keyword">return</span> executor;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> newExecutor();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> AsyncUncaughtExceptionHandler <span class="title">getAsyncUncaughtExceptionHandler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>OneEarMouse
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://codesh.xyz/2022/01/30/Java-spring-thread-pool/" title="Java与Spring中的线程池">http://codesh.xyz/2022/01/30/Java-spring-thread-pool/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/30/Analyse-rate-limiter/" rel="prev" title="Rate Limiter解析">
+      <i class="fa fa-chevron-left"></i> Rate Limiter解析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/21/Openwrt-error-passwd/" rel="next" title="Openwrt升级后密码错误">
+      Openwrt升级后密码错误 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Runnable-%E4%B8%8E-Callable"><span class="nav-text">1. Runnable 与 Callable</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Runable"><span class="nav-text">1.1. Runable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Callable"><span class="nav-text">1.2. Callable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-text">1.3. Future使用方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-text">2. 线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#java%E4%B8%AD%E7%9A%84ThreadPoolExecutor"><span class="nav-text">2.1. java中的ThreadPoolExecutor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97"><span class="nav-text">2.1.1. 队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%92%E7%BB%9D%E7%AD%96%E7%95%A5"><span class="nav-text">2.1.2. 拒绝策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring%E8%87%AA%E5%B8%A6%E7%BA%BF%E7%A8%8B%E6%B1%A0ThreadPoolTaskExecutor"><span class="nav-text">2.2. spring自带线程池ThreadPoolTaskExecutor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="nav-text">2.3. 线程调度策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring%E4%B8%AD%E7%9A%84-Async"><span class="nav-text">3. Spring中的@Async</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Async%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-text">3.1. Async的使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%98%BF%E9%87%8C%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E4%B8%8D%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8-Async"><span class="nav-text">3.2. 为什么阿里编程规范不建议使用@Async</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-text">3.3. 安全使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E6%8C%87%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-text">3.3.1. 方式一：指定线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3AsyncConfigurer"><span class="nav-text">3.3.2. 方式二：实现接口AsyncConfigurer</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="OneEarMouse"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">OneEarMouse</p>
+  <div class="site-description" itemprop="description">程序员一只耳的个人编程问题记录存档，仅供参考</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">OneEarMouse</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">142k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
