@@ -127,5 +127,5 @@ deploy:
   type: git
   repo:
     github: git@github.com:OneEarMouse/oneearmouse.github.io.git
-    dogyun: ssh://hexo@codesh.xyz:4190/home/hexo/blog.git
+    dogyun: ssh://hexo@codesh.online:4190/home/hexo/blog.git
   branch: master
